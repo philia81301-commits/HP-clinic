@@ -1,0 +1,11 @@
+desktop.ini
+*.tmp
+~$*
+.env
+*.key
+credentials.*
+node_modules/
+
+# 臨床資料與院內文件不進 repo
+*.xlsx
+*.csv
