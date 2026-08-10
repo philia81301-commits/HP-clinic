@@ -60,4 +60,4 @@
 
 - 時間：2026-08-10
 - 更新者：opencode @ DESKTOP-LVSV9Q5
-- Git push：⚠️ 待推（本地目前領先遠端 2+ commit，另有本次變動未 commit）
+- Git push：❌ 未推（使用者指示只 commit 不 push。本地已 commit 63c79d5；加上先前 936db5b、3607c83，**目前領先遠端 3 個 commit，下次開工 `git push` 即可**）
