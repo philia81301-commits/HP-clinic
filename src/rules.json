@@ -1,0 +1,374 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "updated": "2026-08-10",
+    "verifiedDate": "2026-08-09",
+    "changelog": [
+      "1.0.0（2026-08-10）初版：第一／二線與複檢付費決策樹，對齊 data/ 六份資料層，每條輸出帶 fact ID"
+    ],
+    "description": "幽門螺旋桿菌（H. pylori）陽性處置決策規則表。診間決策工具與衛教單張共用此檔，不得各自實作判斷邏輯。",
+    "sourceHierarchy": {
+      "principle": "內容位階：健保署／衛福部／國健署／疾管署公告優先；國際指引（如 2024 ACG）僅補充且標「非官方」。有出處 ≠ 有定義，新聞、部落格、舊文件一律重查。",
+      "levels": [
+        { "rank": 1, "label": "台灣官方公告", "detail": "健保署支付標準、藥品給付規定、國健署公告", "usableFor": "給付資格、療程天數、申報條件" },
+        { "rank": 2, "label": "台灣學術研究", "detail": "本土多中心抗藥率研究", "usableFor": "一線選擇依據（標示資料年份）" },
+        { "rank": 3, "label": "國際指引與期刊", "detail": "2024 ACG、Cochrane、Gut", "usableFor": "臨床證據；引用時標「非官方」" },
+        { "rank": 4, "label": "醫院衛教、藥師網站、新聞", "detail": "—", "usableFor": "僅補充說明，不得作為給付陳述依據" }
+      ],
+      "conflictRule": "官方文件之間若有出入，以健保署現行支付標準與國健署最新公告為準，並標示查證日。",
+      "note": "本主題主管機關為健保署（給付）與國健署（公費篩檢）。核心落差：篩檢陽性無潰瘍者，治療後複檢無健保代碼可走。"
+    },
+    "sources": {
+      "RX-01": {
+        "label": "鉍劑四合一（BQT）處方：台大醫院用藥 FAQ、2024 ACG 指引",
+        "url": "https://health.ntuh.gov.tw/health/NTUH_e_Net/NTUH_e_Net_no246/用藥FAQ_No246.pdf",
+        "url2": "https://webfiles.gi.org/links/journals/ACG-Hpylori-Guidelines-Highlights-2024-FINAL.pdf",
+        "level": "非官方",
+        "year": "2024 ACG"
+      },
+      "RX-02": {
+        "label": "非鉍劑四合一（concomitant）：台大用藥 FAQ、台灣藥師期刊",
+        "url": "http://jtp.taiwan-pharma.org.tw/111/013.html",
+        "level": "非官方",
+        "year": "2022（期刊文）"
+      },
+      "RX-03": {
+        "label": "Vonoprazan 三合一：台灣藥師期刊；vonoprazan 給付狀態見健保藥品給付規定 7.1",
+        "url": "https://www.tahsda.org.tw/pharmacy/pharmacypaper/11110.pdf",
+        "url2": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "處方非官方、給付官方",
+        "year": "2022（處方）、20240801 版（給付）"
+      },
+      "RX-04": {
+        "label": "成人範例處方與用藥衛教：台大用藥 FAQ（同 RX-01）",
+        "url": "https://health.ntuh.gov.tw/health/NTUH_e_Net/NTUH_e_Net_no246/用藥FAQ_No246.pdf",
+        "level": "非官方",
+        "year": "2024 ACG 同步"
+      },
+      "RX-05": {
+        "label": "二線處方選項與根除率：台大醫院電子報",
+        "url": "https://health.ntuh.gov.tw/health/Ntuh_e_Net/eBook/no237/15/",
+        "level": "非官方",
+        "year": "—"
+      },
+      "RX-06": {
+        "label": "失敗後鐵律（勿重複相同處方、兩次失敗轉診）：同 RX-05",
+        "url": "https://health.ntuh.gov.tw/health/Ntuh_e_Net/eBook/no237/15/",
+        "level": "非官方",
+        "year": "—"
+      },
+      "RX-07": {
+        "label": "過敏安全分支：推論自各處方成分（RX-01～RX-05）",
+        "url": "https://health.ntuh.gov.tw/health/NTUH_e_Net/NTUH_e_Net_no246/用藥FAQ_No246.pdf",
+        "level": "非官方（成分整理）",
+        "year": "—"
+      },
+      "AMR-01": {
+        "label": "台灣本土抗藥率 2013–2019 多中心研究（n=1,369）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7734532/",
+        "level": "非官方（學術期刊）",
+        "year": "資料收集 2013/01–2019/12，發表 2020"
+      },
+      "NHI-01": {
+        "label": "健保藥品給付規定第 7.1 節：113/8/1 起初次除菌憑陽性報告即可給付",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "113/8/1 生效（20240801 版）"
+      },
+      "NHI-02": {
+        "label": "給付療程以 2 週為原則：同 7.1 節",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "20240801 版"
+      },
+      "NHI-03": {
+        "label": "第二線除菌治療同樣給付：同 7.1 節",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "20240801 版"
+      },
+      "NHI-04": {
+        "label": "vonoprazan 未列入健保給付（須自費）：7.1 節消化性潰瘍用藥清單",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "20240801 版"
+      },
+      "NHI-05": {
+        "label": "30512C 碳13呼氣試驗支付標準（1,160 點，103.08.01 起未修訂）",
+        "url": "https://info.nhi.gov.tw/INAE5000/INAE5001S01",
+        "level": "官方（健保署）",
+        "year": "查詢日 2026-08-09"
+      },
+      "NHI-06": {
+        "label": "3F 糞便抗原（0 點數、限 45–74 歲終身一次公費篩檢）",
+        "url": "https://info.nhi.gov.tw/INAE5000/INAE5001S01",
+        "level": "官方（健保署）",
+        "year": "115/1/1 起生效"
+      },
+      "NHI-07": {
+        "label": "3F 備註：檢體失效補測 100 元、陽性個案確實服藥追蹤補助 200 元；國健署注意事項",
+        "url": "https://www.hpa.gov.tw/Pages/Detail.aspx?nodeid=838&pid=19225",
+        "level": "官方（健保署＋國健署）",
+        "year": "114/7/14 修正、115/1/1 生效"
+      },
+      "NHI-08": {
+        "label": "核心落差：篩檢陽性無潰瘍者，治療後複檢無健保代碼可走（推導自 NHI-01/05/06/07）",
+        "url": "https://info.nhi.gov.tw/INAE5000/INAE5001S01",
+        "level": "官方（推導自四條官方）",
+        "year": "查詢日 2026-08-09"
+      },
+      "NHI-09": {
+        "label": "自費複檢行情（各院所自訂）：呼氣 500–1,500 元、糞便抗原 400–500 元",
+        "url": "https://www.nhi.gov.tw/ch/dl-11606-f5870092ed7b49b89e841981ccd46b4b-1.pdf",
+        "level": "非官方（各院所公告）",
+        "year": "—"
+      },
+      "POL-01": {
+        "label": "國健署：115/1/1 起 45–74 歲終身一次公費糞便抗原篩檢",
+        "url": "https://www.hpa.gov.tw/Pages/Detail.aspx?nodeid=5020&pid=19802",
+        "level": "官方（國健署）",
+        "year": "發布 2026/01/27、生效 115/1/1"
+      },
+      "FU-01": {
+        "label": "複檢時機與方式：療程結束後 4 週，UBT 首選、糞便抗原替代、不可用抗體",
+        "url": "https://www.gidrhann.com/pages/article-hp-treatment-failure.html",
+        "level": "非官方（消化科衛教網站）",
+        "year": "—"
+      },
+      "DX-06": {
+        "label": "檢查前停藥：PPI／P-CAB 停 2 週、抗生素與鉍劑停 4 週",
+        "url": "https://www.ntuh.gov.tw/ckfinder_file/labmed/files/幽門螺旋桿菌碳十三呼氣檢查.pdf",
+        "level": "非官方（台大醫院檢查說明）",
+        "year": "—"
+      }
+    }
+  },
+
+  "treatmentLines": [
+    { "id": "first",     "label": "未曾接受除菌治療", "detail": "初次除菌（篩檢陽性、無潰瘍者也適用，憑陽性報告即可，[NHI-01]）" },
+    { "id": "second",    "label": "已接受過一次除菌治療（失敗）", "detail": "第二線治療，健保同樣給付（[NHI-03]）" },
+    { "id": "refractory","label": "兩次以上治療失敗", "detail": "轉診消化內科做抗藥性檢測（[RX-06]），本工具不開三線處方" }
+  ],
+
+  "penicillinAllergy": {
+    "yes": "penicillin 過敏：一律導向不含 amoxicillin 的鉍劑四合一（[RX-07]）",
+    "no":  "無 penicillin 過敏：可用含 amoxicillin 的處方"
+  },
+
+  "age4574Options": [
+    { "id": "yes", "label": "45–74 歲" },
+    { "id": "no",  "label": "未滿 45 歲或 75 歲以上" }
+  ],
+
+  "ulcerOptions": [
+    { "id": "yes",     "label": "有潰瘍診斷", "detail": "曾以內視鏡或影像證實消化性潰瘍" },
+    { "id": "no",      "label": "無潰瘍診斷", "detail": "典型篩檢陽性情境：未做過胃鏡、無潰瘍診斷" },
+    { "id": "unknown", "label": "未確認／未做過胃鏡", "detail": "依現有資料無法確認有無潰瘍" }
+  ],
+
+  "regimens": {
+    "bismuthQuadruple": {
+      "id": "bismuthQuadruple",
+      "name": "鉍劑四合一（BQT）",
+      "fact": "RX-01",
+      "line": "first",
+      "containsAmoxicillin": false,
+      "drugs": [
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘" },
+        { "name": "Tetracycline", "dose": "500 mg", "freq": "QID", "note": "與乳製品、制酸劑、鐵劑間隔 2 小時以上" },
+        { "name": "Metronidazole", "dose": "500 mg", "freq": "TID", "note": "治療期間及停藥後 48 小時嚴格禁酒" },
+        { "name": "Bismuth subcitrate", "dose": "120–300 mg", "freq": "QID", "note": "黑便、黑舌為無害現象，不需停藥" }
+      ],
+      "durationDays": 14,
+      "durationNote": "文獻 10–14 天；健保給付以 2 週為原則（[NHI-02]），成品一律建議 14 天",
+      "note": "擔心抗藥性時首選；penicillin 過敏者適用（不含 amoxicillin）",
+      "sources": ["RX-01", "RX-04", "NHI-02"]
+    },
+    "concomitantQuadruple": {
+      "id": "concomitantQuadruple",
+      "name": "非鉍劑四合一（concomitant）",
+      "fact": "RX-02",
+      "line": "first",
+      "containsAmoxicillin": true,
+      "drugs": [
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘" },
+        { "name": "Amoxicillin", "dose": "1 g", "freq": "BID", "note": "" },
+        { "name": "Clarithromycin", "dose": "500 mg", "freq": "BID", "note": "" },
+        { "name": "Metronidazole", "dose": "500 mg", "freq": "BID", "note": "治療期間及停藥後 48 小時嚴格禁酒" }
+      ],
+      "durationDays": 14,
+      "durationNote": "療程 14 天（[RX-02]）",
+      "note": "鉍劑不易取得、或無法配合一日四次（QID）服藥時選用",
+      "sources": ["RX-02", "NHI-02"]
+    },
+    "vonoprazanTriple": {
+      "id": "vonoprazanTriple",
+      "name": "Vonoprazan 為基礎的三合一",
+      "fact": "RX-03",
+      "line": "first",
+      "containsAmoxicillin": true,
+      "drugs": [
+        { "name": "Vonoprazan", "dose": "20 mg", "freq": "BID", "note": "需自費，參考藥價約 NT$70/顆（[NHI-04]）" },
+        { "name": "Amoxicillin", "dose": "750 mg", "freq": "BID", "note": "" },
+        { "name": "Clarithromycin", "dose": "200–400 mg", "freq": "BID", "note": "" }
+      ],
+      "durationDays": 7,
+      "durationNote": "台灣仿單 7 天；文獻另有 7–14 天（[RX-03]）",
+      "note": "含 clarithromycin，台灣原發抗藥率 2019 年已達 20.4%，非首選（[AMR-01]）；且 vonoprazan 須自費",
+      "sources": ["RX-03", "NHI-04", "AMR-01"]
+    },
+    "secondBismuthQuadruple": {
+      "id": "secondBismuthQuadruple",
+      "name": "含鉍四合一（二線首選）",
+      "fact": "RX-05",
+      "line": "second",
+      "containsAmoxicillin": false,
+      "drugs": [
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘" },
+        { "name": "Bismuth subcitrate", "dose": "120–300 mg", "freq": "QID", "note": "黑便、黑舌為無害現象" },
+        { "name": "Tetracycline", "dose": "500 mg", "freq": "QID", "note": "與乳製品間隔 2 小時以上" },
+        { "name": "Metronidazole", "dose": "500 mg", "freq": "TID", "note": "治療期間及停藥後 48 小時嚴格禁酒" }
+      ],
+      "durationDays": 14,
+      "durationNote": "依健保 2 週為原則（[NHI-02]）",
+      "note": "根除率約 85–90%；二線首選，penicillin 過敏者唯一選項（[RX-07]）",
+      "sources": ["RX-05", "RX-07", "NHI-03", "NHI-02"]
+    },
+    "levofloxacinTriple": {
+      "id": "levofloxacinTriple",
+      "name": "含 levofloxacin 三合一",
+      "fact": "RX-05",
+      "line": "second",
+      "containsAmoxicillin": true,
+      "drugs": [
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "" },
+        { "name": "Levofloxacin", "dose": "500 mg", "freq": "QD", "note": "" },
+        { "name": "Amoxicillin", "dose": "1 g", "freq": "BID", "note": "" }
+      ],
+      "durationDays": 14,
+      "durationNote": "療程約 10–14 天（[RX-05]）",
+      "note": "根除率約 80%；⚠ 台灣 levofloxacin 抗藥率 2019 年已達 38.8%，成功率可能低於表列（[AMR-01]）",
+      "sources": ["RX-05", "AMR-01"]
+    },
+    "levofloxacinQuadruple": {
+      "id": "levofloxacinQuadruple",
+      "name": "含 levofloxacin 四合一",
+      "fact": "RX-05",
+      "line": "second",
+      "containsAmoxicillin": true,
+      "drugs": [
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "" },
+        { "name": "Levofloxacin", "dose": "500 mg", "freq": "QD", "note": "" },
+        { "name": "Amoxicillin", "dose": "1 g", "freq": "BID", "note": "" },
+        { "name": "Bismuth subcitrate", "dose": "120–300 mg", "freq": "QID", "note": "黑便、黑舌為無害現象" }
+      ],
+      "durationDays": 14,
+      "durationNote": "療程約 10–14 天（[RX-05]）",
+      "note": "根除率約 85%；⚠ 同受 levofloxacin 抗藥影響（[AMR-01]）",
+      "sources": ["RX-05", "AMR-01"]
+    }
+  },
+
+  "decisionRules": [
+    {
+      "id": "first-ok",
+      "when": { "line": "first", "allergy": "no" },
+      "primary": "bismuthQuadruple",
+      "alternatives": ["concomitantQuadruple", "vonoprazanTriple"],
+      "headline": "初次除菌：鉍劑四合一為首選（14 天）",
+      "note": "台灣 clarithromycin 抗藥率已逾 15% 門檻，不建議 clarithromycin 三合一作為一線（[AMR-01]）；鉍劑四合一不含 clarithromycin 與 amoxicillin，最穩健。"
+    },
+    {
+      "id": "first-allergy",
+      "when": { "line": "first", "allergy": "yes" },
+      "primary": "bismuthQuadruple",
+      "alternatives": [],
+      "headline": "初次除菌＋penicillin 過敏：鉍劑四合一（不含 amoxicillin）",
+      "note": "過敏者一律導向不含 amoxicillin 的鉍劑四合一（[RX-07]）；其餘一線處方皆含 amoxicillin，不得顯示。"
+    },
+    {
+      "id": "second-ok",
+      "when": { "line": "second", "allergy": "no" },
+      "primary": "secondBismuthQuadruple",
+      "alternatives": ["levofloxacinTriple", "levofloxacinQuadruple"],
+      "headline": "第二線：含鉍四合一為首選（14 天）",
+      "note": "二線健保同樣給付（[NHI-03]）；切勿重複第一線用過的處方（[RX-06]）。含 levofloxacin 處方受台灣 38.8% 抗藥率影響，成功率可能打折。"
+    },
+    {
+      "id": "second-allergy",
+      "when": { "line": "second", "allergy": "yes" },
+      "primary": "secondBismuthQuadruple",
+      "alternatives": [],
+      "headline": "第二線＋penicillin 過敏：含鉍四合一（不含 amoxicillin）",
+      "note": "過敏者二線一律走含鉍四合一（[RX-07]）；levofloxacin 三合一／四合一皆含 amoxicillin，不得顯示。"
+    }
+  ],
+
+  "refractoryRule": {
+    "when": { "line": "refractory" },
+    "action": "refer",
+    "headline": "兩次以上失敗：轉診消化內科做抗藥性檢測",
+    "detail": "依 [RX-06]，兩次以上治療失敗應轉診消化內科做抗藥性檢測後選藥；切勿重複相同處方，本工具不建三線規則。",
+    "sources": ["RX-06"]
+  },
+
+  "retest": {
+    "timing": "吃完藥滿一個月（療程結束後 4 週）複檢",
+    "timingSource": "FU-01",
+    "stopRule": "複檢前停藥：PPI／P-CAB 停 2 週、抗生素與鉍劑停 4 週，否則細菌被壓制會驗成假陰性",
+    "stopRuleSource": "DX-06",
+    "method": "首選碳13呼氣試驗（UBT）；無法配合者用糞便抗原；不可用血液抗體（根除後仍可陽性 6–24 個月）",
+    "methodSource": "FU-01",
+    "paymentRules": [
+      {
+        "id": "ulcer-covered",
+        "when": { "ulcer": "yes" },
+        "status": "covered",
+        "headline": "複檢可走健保：30512C（碳13呼氣試驗）",
+        "detail": "有潰瘍診斷，符合 30512C 適應症②「證實為潰瘍併感染，除菌後療效確認與追蹤」（1,160 點；停藥後一個月施行一次）。",
+        "sources": ["NHI-05"]
+      },
+      {
+        "id": "no-ulcer-age4574",
+        "when": { "ulcer": "no", "age4574": "yes" },
+        "status": "selfpay_or_record",
+        "headline": "複檢無健保可走：自費，或以「確實服藥」紀錄替代",
+        "detail": "篩檢陽性、無潰瘍診斷者，30512C 仍卡在潰瘍適應症、3F 已於初次篩檢用掉，治療後複檢沒有健保代碼。實務兩條路：①自費複檢（各院所自訂）；②以「確實服藥」追蹤紀錄替代生物學複驗，上傳國健署系統（3F 補助 200 元所認可的追蹤方式）。",
+        "sources": ["NHI-08", "NHI-07", "NHI-09"]
+      },
+      {
+        "id": "no-ulcer-other",
+        "when": { "ulcer": "no" },
+        "status": "selfpay",
+        "headline": "複檢需自費",
+        "detail": "無潰瘍診斷者沒有健保複檢代碼可走，需自費：碳13呼氣約 NT$500–1,500、糞便抗原約 NT$400–500（依各院所公告，非全國統一）。",
+        "sources": ["NHI-08", "NHI-09"]
+      },
+      {
+        "id": "ulcer-unknown",
+        "when": { "ulcer": "unknown" },
+        "status": "unconfirmed",
+        "headline": "先確認有無潰瘍診斷，再決定複檢給付",
+        "detail": "未確認潰瘍時，30512C 適用與否無法判定。若日後確認有潰瘍可走健保複檢；無潰瘍則需自費（呼氣約 500–1,500 元）或以「確實服藥」紀錄替代。",
+        "sources": ["NHI-08", "NHI-05", "NHI-09"]
+      }
+    ]
+  },
+
+  "familyScreening": {
+    "headline": "同住家人一併篩檢，避免「乒乓球效應」",
+    "detail": "只治療單一帶菌者，容易被家人再傳回來；同住家人應先篩檢、陽性才治療（[FAM-03]）。45–74 歲家人可直接使用國健署終身一次公費糞便抗原篩檢（[POL-01]）；若已用掉該次機會則需自費。",
+    "sources": ["FAM-03", "POL-01"]
+  },
+
+  "warnings": {
+    "bloodAntibody": "⛔ 不要用血液抗體確認根除：根除成功後抗體仍可陽性 6–24 個月，會誤判為治療失敗、白吃第二輪藥（[DX-02]）",
+    "noStopRule": "⛔ 複檢前未停藥會假陰性：PPI／P-CAB 停 2 週、抗生素與鉍劑停 4 週（[DX-06]）",
+    "metronidazoleAlcohol": "⛔ metronidazole 治療期間及停藥後 48 小時嚴格禁酒（[RX-04]）",
+    "blackStool": "⚠ 鉍劑會造成黑便、黑舌，為無害現象，不需停藥（[RX-04]）",
+    "repeatRegimen": "⛔ 切勿重複相同處方：必須換用不同抗生素組合（[RX-06]）"
+  },
+
+  "disclaimer": "本工具依健保署與國健署現行規定（查證日 2026-08-09）整理，僅供臨床參考，不取代醫師之個別臨床判斷。給付規定會變動，處方前請核對健保署最新公告。本工具不收集任何病人資料，純前端計算、不留紀錄。",
+  "__END__": true
+}

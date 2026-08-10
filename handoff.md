@@ -4,16 +4,25 @@
 
 ## ⏯️ 目前做到哪
 
-**階段一（資料層＋查證）完成。** `data/` 六份齊備，每條事實帶 ID、出處、資料年份與官方／非官方位階。兩隻查證子代理都已回報並收進資料層。
+**階段二（決策工具＋衛教單張）進行中，主體已完成。**
+
+- `src/rules.json` v1.0.0：20 條 sources、6 個療程、4 條決策規則、4 條給付規則，JSON 驗證通過
+- `src/engine.js`：決策引擎完成，Node 驗證 5 情境全對（first/second × 過敏 × refractory），過敏防呆（洩漏 amoxicillin 會回 error）
+- `src/build.js`：已產出 `output/` 兩份 HTML（決策工具 38.7KB＋衛教單張 8.2KB），單檔、無外部資源
+- `src/decision.template.html`：決策工具 UI（ulcer 預設「無潰瘍診斷」）
+- `src/leaflet.template.html`：衛教單張（210×279.4mm，A4∩Letter）
+- `src/serve.js`：本機預覽 http://127.0.0.1:8765（背景 process）
+- Playwright 實測：**決策工具四情境全對**——預設情境顯示「複檢無健保可走：自費或確實服藥替代」、過敏分支無 amoxicillin、refractory 轉診消化內科、有潰瘍顯示 30512C 健保
 
 ## 🚦 目前狀態
 
-- `rdq/RDQ-spec-hpylori-treatment-20260809.md`：**已確認**，需求凍結，唯一需求來源
-- `data/`：01–06 六份完成並已推
-- `src/`、`output/`：空，階段二才動
-- 17 條 🔲 待溯源掛在各檔檔尾，**不影響階段二開工**
+- `rdq/RDQ-spec-hpylori-treatment-20260809.md`：已確認，需求凍結，唯一需求來源
+- `data/`：01–06 六份完成（階段一），17 條 🔲 待溯源未清、不擋階段二
+- `src/`：rules.json、engine.js、build.js、serve.js、decision.template.html、leaflet.template.html 齊備
+- `output/`：兩份 HTML 已產出
+- **衛教單張仍是 2 頁**（footer 溢到第二頁）——見下方注意事項，需以 PDF 實渲染為準再縮
 
-## ⭐ 本階段最重要的發現（決策工具必須實作）
+## ⭐ 本階段最重要的發現（決策工具已實作）
 
 **篩檢陽性、無潰瘍的病人，治療後複檢沒有健保代碼可走。**
 
@@ -28,11 +37,12 @@
 
 詳見 `data/04-健保給付與申報.md` 的 [NHI-05]～[NHI-09]。
 
-## ➡️ 下一步（階段二）
+## ➡️ 下一步（階段二剩餘）
 
-1. 建 `src/rules.json`：決策樹輸入為「是否曾除菌治療 / penicillin 過敏 / 年齡是否 45–74 / 有無潰瘍診斷」，輸出療程＋天數＋**複檢付費狀態**
-2. 產出 `output/` 的**診間決策工具**與**病人衛教單張**（兩者共用 rules.json，一起做才不會漂）
-3. 有餘裕再清 🔲 待溯源，**優先做馬祖除菌降胃癌 53%** —— 簡報最需要它，出處卻最爛（現為商業部落格）
+1. **衛教單張壓回 1 頁**：已把字級縮到 13.5px、行距 1.38、精簡三處文案，screen 下 body 850px < 可用 973px，但 **headless PDF 實渲染仍 2 頁**（第二頁只剩 footer）——研判是 headless 無「Noto Sans TC」走 fallback 字體偏高所致。以 `pdftotext` 驗證（temp: leaflet_check.pdf），需再縮 footer 字級或精簡內容
+2. 建 `src/engine.test.js`（窮舉＋情境測試）
+3. 建 `src/acceptance.py`（對 RDQ 驗收條件）
+4. 執行 test＋acceptance
 
 ## ⚠️ 注意事項
 
@@ -45,9 +55,13 @@
 - 自費金額**不要寫死**（各院自訂），素材原寫的「1,200–1,300 元」偏高且範圍過窄，已改用 [NHI-09]
 - 給付規定會變，成品必須顯示「本資料查證日：**2026-08-09**」
 - PowerShell 5.1 會把 git／gh 的 stderr 包成 NativeCommandError，看起來像失敗其實成功，看最後幾行判斷
+- **衛教單張尺寸鐵律**：用 `@page size:210mm 279.4mm`（A4∩Letter 交集），**不要改成 size:Letter**（會比 A4 寬 5.9mm 被裁）；溢頁只靠縮字級/行距/文案解決
+- **UI 預設值**：決策工具「有無潰瘍診斷」預設「無潰瘍診斷」（貼合主流情境）
+- **`.playwright-mcp/` 已加進 .gitignore**，不 commit
+- 用詞：決策工具不收集任何病人資料（純前端、無表單、無後端）
 
 ## 🕐 最後更新
 
-- 時間：2026-08-09
-- 更新者：Claude Code（阿克）@ DESKTOP-LVSV9Q5
-- Git push：✅ 已推
+- 時間：2026-08-10
+- 更新者：opencode @ DESKTOP-LVSV9Q5
+- Git push：待推（本次 commit 後回填）

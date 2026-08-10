@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>幽門螺旋桿菌陽性處置　診間決策工具</title>
+<style>
+  :root{
+    --ink:#1a2430; --ink2:#4c5c68; --line:#cfdbe2;
+    --main:#0f4c5c; --soft:#e6f0f4; --ok:#1c6b48; --ok-l:#e6f4ec;
+    --warn:#a45208; --warn-l:#fdf2e3; --bad:#8f2626; --bad-l:#fbeced;
+    --shared:#7a8b99;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#eef2f5;color:var(--ink);
+    font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+    font-size:15px;line-height:1.6}
+  header{background:linear-gradient(135deg,#0f4c5c,#144d6e);color:#fff;padding:26px 0}
+  .wrap{max-width:940px;margin:0 auto;padding:0 22px}
+  h1{margin:0 0 6px;font-size:27px;line-height:1.35}
+  .sub{margin:0;font-size:15px;opacity:.9}
+  .meta{margin:10px 0 0;font-size:13px;opacity:.78}
+  .tool{background:#fff;border:2px solid var(--main);border-radius:12px;padding:22px;margin:22px 0}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+  label{display:block;font-size:14px;font-weight:700;margin:12px 0 5px}
+  .chk{font-weight:400;font-size:14px;margin:5px 0;display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+  .chk input{margin-top:5px;flex:none;width:17px;height:17px}
+  select,input[type=text]{font:inherit;font-size:15px;padding:8px 10px;width:100%;
+    border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+  .hint{font-size:12.5px;color:var(--ink2);font-weight:400;margin-top:2px}
+  #out{margin-top:20px}
+  .res{border-radius:10px;padding:18px 20px;border:1px solid var(--line);background:#fff}
+  .res .hl{font-size:21px;font-weight:800;margin-bottom:4px}
+  .res.treat{border-left:6px solid var(--ok);background:var(--ok-l)}
+  .res.treat .hl{color:var(--ok)}
+  .res.refer{border-left:6px solid var(--warn);background:var(--warn-l)}
+  .res.refer .hl{color:var(--warn)}
+  .res.error{border-left:6px solid var(--bad);background:var(--bad-l)}
+  .res.error .hl{color:var(--bad)}
+  .pill{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:99px;
+    padding:3px 12px;font-size:13px;margin:3px 4px 3px 0}
+  .pill b{color:var(--main)}
+  .rx{background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px 16px;margin:12px 0}
+  .rx .rxn{font-size:17px;font-weight:800;color:var(--main);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rx .role{font-size:12px;color:#fff;background:var(--ok);border-radius:99px;padding:2px 10px;font-weight:700}
+  .rx .role.alt{background:var(--shared)}
+  table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+  th,td{border:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top}
+  th{background:var(--soft);color:var(--main);font-weight:700;white-space:nowrap}
+  .note{font-size:13.5px;color:var(--ink2);margin-top:6px}
+  .warnbox{background:var(--warn-l);border-left:4px solid var(--warn);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:14px}
+  .badbox{background:var(--bad-l);border-left:4px solid var(--bad);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:14px}
+  .okbox{background:var(--ok-l);border-left:4px solid var(--ok);border-radius:0 8px 8px 0;padding:10px 14px;margin:10px 0;font-size:14px}
+  .src{font-size:12.5px;color:var(--ink2);margin-top:4px}
+  .src a{color:var(--main)}
+  .refbox{background:#f6f9fb;border:1px solid var(--line);border-radius:9px;padding:12px 15px;margin:12px 0;font-size:13px}
+  .refbox b{color:var(--main)}
+  footer{margin-top:46px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink2)}
+  @media (max-width:640px){h1{font-size:22px}.tool{padding:15px}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>幽門螺旋桿菌陽性處置<br>診間決策工具</h1>
+    <p class="sub">給醫師、衛教師、藥師　—　每條建議都附依據與出處</p>
+    <p class="meta">資料查證日：2026-08-09　｜　規則表版本 <span id="rv"></span>　｜　本工具純前端計算，不收集任何病人資料、不留紀錄</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="tool">
+    <div class="grid2">
+      <div>
+        <label for="line">這個病人接受過除菌治療嗎？</label>
+        <select id="line"></select>
+
+        <label for="allergy">對 penicillin（盤尼西林）過敏嗎？</label>
+        <select id="allergy">
+          <option value="no">無過敏</option>
+          <option value="yes">有過敏</option>
+        </select>
+        <div class="hint">過敏者一律導向不含 amoxicillin 的鉍劑四合一（[RX-07]）。</div>
+      </div>
+      <div>
+        <label for="ulcer">有潰瘍診斷嗎？</label>
+        <select id="ulcer"></select>
+
+        <label for="age4574">年齡是否在 45–74 歲？</label>
+        <select id="age4574">
+          <option value="yes">是（45–74 歲）</option>
+          <option value="no">否（未滿 45 歲或 75 歲以上）</option>
+        </select>
+        <div class="hint">45–74 歲者可適用國健署公費篩檢與「確實服藥」追蹤機制（[POL-01]、[NHI-07]）。</div>
+      </div>
+    </div>
+    <div id="out"></div>
+  </div>
+
+  <div class="refbox">
+    <b>使用說明</b>：本工具依健保署與國健署現行規定整理，輸出「建議療程＋天數＋複檢付費狀態」。四項輸入皆必填；
+    兩次以上治療失敗一律轉診消化內科做抗藥性檢測，本工具不建三線規則。每條輸出的依據與出處標在下方。
+  </div>
+
+<footer>
+  <p>本工具依健保署藥品給付規定與國健署公告（查證日 2026-08-09）整理，僅供臨床參考，不取代醫師之個別臨床判斷；給付規定會變動，處方前請核對健保署最新公告。</p>
+  <p>製作：2026-08-10　｜　規則表版本 <span class="rv2"></span>　｜　本工具未使用任何病人資料</p>
+</footer>
+
+</div>
+
+<script>
+/* ═══ 內嵌規則表（由 build.js 從 src/rules.json 注入，勿手動編輯）═══ */
+var HP_RULES = {
+  "meta": {
+    "version": "1.0.0",
+    "updated": "2026-08-10",
+    "verifiedDate": "2026-08-09",
+    "changelog": [
+      "1.0.0（2026-08-10）初版：第一／二線與複檢付費決策樹，對齊 data/ 六份資料層，每條輸出帶 fact ID"
+    ],
+    "description": "幽門螺旋桿菌（H. pylori）陽性處置決策規則表。診間決策工具與衛教單張共用此檔，不得各自實作判斷邏輯。",
+    "sourceHierarchy": {
+      "principle": "內容位階：健保署／衛福部／國健署／疾管署公告優先；國際指引（如 2024 ACG）僅補充且標「非官方」。有出處 ≠ 有定義，新聞、部落格、舊文件一律重查。",
+      "levels": [
+        {
+          "rank": 1,
+          "label": "台灣官方公告",
+          "detail": "健保署支付標準、藥品給付規定、國健署公告",
+          "usableFor": "給付資格、療程天數、申報條件"
+        },
+        {
+          "rank": 2,
+          "label": "台灣學術研究",
+          "detail": "本土多中心抗藥率研究",
+          "usableFor": "一線選擇依據（標示資料年份）"
+        },
+        {
+          "rank": 3,
+          "label": "國際指引與期刊",
+          "detail": "2024 ACG、Cochrane、Gut",
+          "usableFor": "臨床證據；引用時標「非官方」"
+        },
+        {
+          "rank": 4,
+          "label": "醫院衛教、藥師網站、新聞",
+          "detail": "—",
+          "usableFor": "僅補充說明，不得作為給付陳述依據"
+        }
+      ],
+      "conflictRule": "官方文件之間若有出入，以健保署現行支付標準與國健署最新公告為準，並標示查證日。",
+      "note": "本主題主管機關為健保署（給付）與國健署（公費篩檢）。核心落差：篩檢陽性無潰瘍者，治療後複檢無健保代碼可走。"
+    },
+    "sources": {
+      "RX-01": {
+        "label": "鉍劑四合一（BQT）處方：台大醫院用藥 FAQ、2024 ACG 指引",
+        "url": "https://health.ntuh.gov.tw/health/NTUH_e_Net/NTUH_e_Net_no246/用藥FAQ_No246.pdf",
+        "url2": "https://webfiles.gi.org/links/journals/ACG-Hpylori-Guidelines-Highlights-2024-FINAL.pdf",
+        "level": "非官方",
+        "year": "2024 ACG"
+      },
+      "RX-02": {
+        "label": "非鉍劑四合一（concomitant）：台大用藥 FAQ、台灣藥師期刊",
+        "url": "http://jtp.taiwan-pharma.org.tw/111/013.html",
+        "level": "非官方",
+        "year": "2022（期刊文）"
+      },
+      "RX-03": {
+        "label": "Vonoprazan 三合一：台灣藥師期刊；vonoprazan 給付狀態見健保藥品給付規定 7.1",
+        "url": "https://www.tahsda.org.tw/pharmacy/pharmacypaper/11110.pdf",
+        "url2": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "處方非官方、給付官方",
+        "year": "2022（處方）、20240801 版（給付）"
+      },
+      "RX-04": {
+        "label": "成人範例處方與用藥衛教：台大用藥 FAQ（同 RX-01）",
+        "url": "https://health.ntuh.gov.tw/health/NTUH_e_Net/NTUH_e_Net_no246/用藥FAQ_No246.pdf",
+        "level": "非官方",
+        "year": "2024 ACG 同步"
+      },
+      "RX-05": {
+        "label": "二線處方選項與根除率：台大醫院電子報",
+        "url": "https://health.ntuh.gov.tw/health/Ntuh_e_Net/eBook/no237/15/",
+        "level": "非官方",
+        "year": "—"
+      },
+      "RX-06": {
+        "label": "失敗後鐵律（勿重複相同處方、兩次失敗轉診）：同 RX-05",
+        "url": "https://health.ntuh.gov.tw/health/Ntuh_e_Net/eBook/no237/15/",
+        "level": "非官方",
+        "year": "—"
+      },
+      "RX-07": {
+        "label": "過敏安全分支：推論自各處方成分（RX-01～RX-05）",
+        "url": "https://health.ntuh.gov.tw/health/NTUH_e_Net/NTUH_e_Net_no246/用藥FAQ_No246.pdf",
+        "level": "非官方（成分整理）",
+        "year": "—"
+      },
+      "AMR-01": {
+        "label": "台灣本土抗藥率 2013–2019 多中心研究（n=1,369）",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7734532/",
+        "level": "非官方（學術期刊）",
+        "year": "資料收集 2013/01–2019/12，發表 2020"
+      },
+      "NHI-01": {
+        "label": "健保藥品給付規定第 7.1 節：113/8/1 起初次除菌憑陽性報告即可給付",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "113/8/1 生效（20240801 版）"
+      },
+      "NHI-02": {
+        "label": "給付療程以 2 週為原則：同 7.1 節",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "20240801 版"
+      },
+      "NHI-03": {
+        "label": "第二線除菌治療同樣給付：同 7.1 節",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "20240801 版"
+      },
+      "NHI-04": {
+        "label": "vonoprazan 未列入健保給付（須自費）：7.1 節消化性潰瘍用藥清單",
+        "url": "https://info.nhi.gov.tw/api/INAE3000/INAE3000S01/getPDF?DurgFileName=7.1._20240801.pdf",
+        "level": "官方（健保署）",
+        "year": "20240801 版"
+      },
+      "NHI-05": {
+        "label": "30512C 碳13呼氣試驗支付標準（1,160 點，103.08.01 起未修訂）",
+        "url": "https://info.nhi.gov.tw/INAE5000/INAE5001S01",
+        "level": "官方（健保署）",
+        "year": "查詢日 2026-08-09"
+      },
+      "NHI-06": {
+        "label": "3F 糞便抗原（0 點數、限 45–74 歲終身一次公費篩檢）",
+        "url": "https://info.nhi.gov.tw/INAE5000/INAE5001S01",
+        "level": "官方（健保署）",
+        "year": "115/1/1 起生效"
+      },
+      "NHI-07": {
+        "label": "3F 備註：檢體失效補測 100 元、陽性個案確實服藥追蹤補助 200 元；國健署注意事項",
+        "url": "https://www.hpa.gov.tw/Pages/Detail.aspx?nodeid=838&pid=19225",
+        "level": "官方（健保署＋國健署）",
+        "year": "114/7/14 修正、115/1/1 生效"
+      },
+      "NHI-08": {
+        "label": "核心落差：篩檢陽性無潰瘍者，治療後複檢無健保代碼可走（推導自 NHI-01/05/06/07）",
+        "url": "https://info.nhi.gov.tw/INAE5000/INAE5001S01",
+        "level": "官方（推導自四條官方）",
+        "year": "查詢日 2026-08-09"
+      },
+      "NHI-09": {
+        "label": "自費複檢行情（各院所自訂）：呼氣 500–1,500 元、糞便抗原 400–500 元",
+        "url": "https://www.nhi.gov.tw/ch/dl-11606-f5870092ed7b49b89e841981ccd46b4b-1.pdf",
+        "level": "非官方（各院所公告）",
+        "year": "—"
+      },
+      "POL-01": {
+        "label": "國健署：115/1/1 起 45–74 歲終身一次公費糞便抗原篩檢",
+        "url": "https://www.hpa.gov.tw/Pages/Detail.aspx?nodeid=5020&pid=19802",
+        "level": "官方（國健署）",
+        "year": "發布 2026/01/27、生效 115/1/1"
+      },
+      "FU-01": {
+        "label": "複檢時機與方式：療程結束後 4 週，UBT 首選、糞便抗原替代、不可用抗體",
+        "url": "https://www.gidrhann.com/pages/article-hp-treatment-failure.html",
+        "level": "非官方（消化科衛教網站）",
+        "year": "—"
+      },
+      "DX-06": {
+        "label": "檢查前停藥：PPI／P-CAB 停 2 週、抗生素與鉍劑停 4 週",
+        "url": "https://www.ntuh.gov.tw/ckfinder_file/labmed/files/幽門螺旋桿菌碳十三呼氣檢查.pdf",
+        "level": "非官方（台大醫院檢查說明）",
+        "year": "—"
+      }
+    }
+  },
+  "treatmentLines": [
+    {
+      "id": "first",
+      "label": "未曾接受除菌治療",
+      "detail": "初次除菌（篩檢陽性、無潰瘍者也適用，憑陽性報告即可，[NHI-01]）"
+    },
+    {
+      "id": "second",
+      "label": "已接受過一次除菌治療（失敗）",
+      "detail": "第二線治療，健保同樣給付（[NHI-03]）"
+    },
+    {
+      "id": "refractory",
+      "label": "兩次以上治療失敗",
+      "detail": "轉診消化內科做抗藥性檢測（[RX-06]），本工具不開三線處方"
+    }
+  ],
+  "penicillinAllergy": {
+    "yes": "penicillin 過敏：一律導向不含 amoxicillin 的鉍劑四合一（[RX-07]）",
+    "no": "無 penicillin 過敏：可用含 amoxicillin 的處方"
+  },
+  "age4574Options": [
+    {
+      "id": "yes",
+      "label": "45–74 歲"
+    },
+    {
+      "id": "no",
+      "label": "未滿 45 歲或 75 歲以上"
+    }
+  ],
+  "ulcerOptions": [
+    {
+      "id": "yes",
+      "label": "有潰瘍診斷",
+      "detail": "曾以內視鏡或影像證實消化性潰瘍"
+    },
+    {
+      "id": "no",
+      "label": "無潰瘍診斷",
+      "detail": "典型篩檢陽性情境：未做過胃鏡、無潰瘍診斷"
+    },
+    {
+      "id": "unknown",
+      "label": "未確認／未做過胃鏡",
+      "detail": "依現有資料無法確認有無潰瘍"
+    }
+  ],
+  "regimens": {
+    "bismuthQuadruple": {
+      "id": "bismuthQuadruple",
+      "name": "鉍劑四合一（BQT）",
+      "fact": "RX-01",
+      "line": "first",
+      "containsAmoxicillin": false,
+      "drugs": [
+        {
+          "name": "PPI",
+          "dose": "1 顆",
+          "freq": "BID",
+          "note": "餐前 30–60 分鐘"
+        },
+        {
+          "name": "Tetracycline",
+          "dose": "500 mg",
+          "freq": "QID",
+          "note": "與乳製品、制酸劑、鐵劑間隔 2 小時以上"
+        },
+        {
+          "name": "Metronidazole",
+          "dose": "500 mg",
+          "freq": "TID",
+          "note": "治療期間及停藥後 48 小時嚴格禁酒"
+        },
+        {
+          "name": "Bismuth subcitrate",
+          "dose": "120–300 mg",
+          "freq": "QID",
+          "note": "黑便、黑舌為無害現象，不需停藥"
+        }
+      ],
+      "durationDays": 14,
+      "durationNote": "文獻 10–14 天；健保給付以 2 週為原則（[NHI-02]），成品一律建議 14 天",
+      "note": "擔心抗藥性時首選；penicillin 過敏者適用（不含 amoxicillin）",
+      "sources": [
+        "RX-01",
+        "RX-04",
+        "NHI-02"
+      ]
+    },
+    "concomitantQuadruple": {
+      "id": "concomitantQuadruple",
+      "name": "非鉍劑四合一（concomitant）",
+      "fact": "RX-02",
+      "line": "first",
+      "containsAmoxicillin": true,
+      "drugs": [
+        {
+          "name": "PPI",
+          "dose": "1 顆",
+          "freq": "BID",
+          "note": "餐前 30–60 分鐘"
+        },
+        {
+          "name": "Amoxicillin",
+          "dose": "1 g",
+          "freq": "BID",
+          "note": ""
+        },
+        {
+          "name": "Clarithromycin",
+          "dose": "500 mg",
+          "freq": "BID",
+          "note": ""
+        },
+        {
+          "name": "Metronidazole",
+          "dose": "500 mg",
+          "freq": "BID",
+          "note": "治療期間及停藥後 48 小時嚴格禁酒"
+        }
+      ],
+      "durationDays": 14,
+      "durationNote": "療程 14 天（[RX-02]）",
+      "note": "鉍劑不易取得、或無法配合一日四次（QID）服藥時選用",
+      "sources": [
+        "RX-02",
+        "NHI-02"
+      ]
+    },
+    "vonoprazanTriple": {
+      "id": "vonoprazanTriple",
+      "name": "Vonoprazan 為基礎的三合一",
+      "fact": "RX-03",
+      "line": "first",
+      "containsAmoxicillin": true,
+      "drugs": [
+        {
+          "name": "Vonoprazan",
+          "dose": "20 mg",
+          "freq": "BID",
+          "note": "需自費，參考藥價約 NT$70/顆（[NHI-04]）"
+        },
+        {
+          "name": "Amoxicillin",
+          "dose": "750 mg",
+          "freq": "BID",
+          "note": ""
+        },
+        {
+          "name": "Clarithromycin",
+          "dose": "200–400 mg",
+          "freq": "BID",
+          "note": ""
+        }
+      ],
+      "durationDays": 7,
+      "durationNote": "台灣仿單 7 天；文獻另有 7–14 天（[RX-03]）",
+      "note": "含 clarithromycin，台灣原發抗藥率 2019 年已達 20.4%，非首選（[AMR-01]）；且 vonoprazan 須自費",
+      "sources": [
+        "RX-03",
+        "NHI-04",
+        "AMR-01"
+      ]
+    },
+    "secondBismuthQuadruple": {
+      "id": "secondBismuthQuadruple",
+      "name": "含鉍四合一（二線首選）",
+      "fact": "RX-05",
+      "line": "second",
+      "containsAmoxicillin": false,
+      "drugs": [
+        {
+          "name": "PPI",
+          "dose": "1 顆",
+          "freq": "BID",
+          "note": "餐前 30–60 分鐘"
+        },
+        {
+          "name": "Bismuth subcitrate",
+          "dose": "120–300 mg",
+          "freq": "QID",
+          "note": "黑便、黑舌為無害現象"
+        },
+        {
+          "name": "Tetracycline",
+          "dose": "500 mg",
+          "freq": "QID",
+          "note": "與乳製品間隔 2 小時以上"
+        },
+        {
+          "name": "Metronidazole",
+          "dose": "500 mg",
+          "freq": "TID",
+          "note": "治療期間及停藥後 48 小時嚴格禁酒"
+        }
+      ],
+      "durationDays": 14,
+      "durationNote": "依健保 2 週為原則（[NHI-02]）",
+      "note": "根除率約 85–90%；二線首選，penicillin 過敏者唯一選項（[RX-07]）",
+      "sources": [
+        "RX-05",
+        "RX-07",
+        "NHI-03",
+        "NHI-02"
+      ]
+    },
+    "levofloxacinTriple": {
+      "id": "levofloxacinTriple",
+      "name": "含 levofloxacin 三合一",
+      "fact": "RX-05",
+      "line": "second",
+      "containsAmoxicillin": true,
+      "drugs": [
+        {
+          "name": "PPI",
+          "dose": "1 顆",
+          "freq": "BID",
+          "note": ""
+        },
+        {
+          "name": "Levofloxacin",
+          "dose": "500 mg",
+          "freq": "QD",
+          "note": ""
+        },
+        {
+          "name": "Amoxicillin",
+          "dose": "1 g",
+          "freq": "BID",
+          "note": ""
+        }
+      ],
+      "durationDays": 14,
+      "durationNote": "療程約 10–14 天（[RX-05]）",
+      "note": "根除率約 80%；⚠ 台灣 levofloxacin 抗藥率 2019 年已達 38.8%，成功率可能低於表列（[AMR-01]）",
+      "sources": [
+        "RX-05",
+        "AMR-01"
+      ]
+    },
+    "levofloxacinQuadruple": {
+      "id": "levofloxacinQuadruple",
+      "name": "含 levofloxacin 四合一",
+      "fact": "RX-05",
+      "line": "second",
+      "containsAmoxicillin": true,
+      "drugs": [
+        {
+          "name": "PPI",
+          "dose": "1 顆",
+          "freq": "BID",
+          "note": ""
+        },
+        {
+          "name": "Levofloxacin",
+          "dose": "500 mg",
+          "freq": "QD",
+          "note": ""
+        },
+        {
+          "name": "Amoxicillin",
+          "dose": "1 g",
+          "freq": "BID",
+          "note": ""
+        },
+        {
+          "name": "Bismuth subcitrate",
+          "dose": "120–300 mg",
+          "freq": "QID",
+          "note": "黑便、黑舌為無害現象"
+        }
+      ],
+      "durationDays": 14,
+      "durationNote": "療程約 10–14 天（[RX-05]）",
+      "note": "根除率約 85%；⚠ 同受 levofloxacin 抗藥影響（[AMR-01]）",
+      "sources": [
+        "RX-05",
+        "AMR-01"
+      ]
+    }
+  },
+  "decisionRules": [
+    {
+      "id": "first-ok",
+      "when": {
+        "line": "first",
+        "allergy": "no"
+      },
+      "primary": "bismuthQuadruple",
+      "alternatives": [
+        "concomitantQuadruple",
+        "vonoprazanTriple"
+      ],
+      "headline": "初次除菌：鉍劑四合一為首選（14 天）",
+      "note": "台灣 clarithromycin 抗藥率已逾 15% 門檻，不建議 clarithromycin 三合一作為一線（[AMR-01]）；鉍劑四合一不含 clarithromycin 與 amoxicillin，最穩健。"
+    },
+    {
+      "id": "first-allergy",
+      "when": {
+        "line": "first",
+        "allergy": "yes"
+      },
+      "primary": "bismuthQuadruple",
+      "alternatives": [],
+      "headline": "初次除菌＋penicillin 過敏：鉍劑四合一（不含 amoxicillin）",
+      "note": "過敏者一律導向不含 amoxicillin 的鉍劑四合一（[RX-07]）；其餘一線處方皆含 amoxicillin，不得顯示。"
+    },
+    {
+      "id": "second-ok",
+      "when": {
+        "line": "second",
+        "allergy": "no"
+      },
+      "primary": "secondBismuthQuadruple",
+      "alternatives": [
+        "levofloxacinTriple",
+        "levofloxacinQuadruple"
+      ],
+      "headline": "第二線：含鉍四合一為首選（14 天）",
+      "note": "二線健保同樣給付（[NHI-03]）；切勿重複第一線用過的處方（[RX-06]）。含 levofloxacin 處方受台灣 38.8% 抗藥率影響，成功率可能打折。"
+    },
+    {
+      "id": "second-allergy",
+      "when": {
+        "line": "second",
+        "allergy": "yes"
+      },
+      "primary": "secondBismuthQuadruple",
+      "alternatives": [],
+      "headline": "第二線＋penicillin 過敏：含鉍四合一（不含 amoxicillin）",
+      "note": "過敏者二線一律走含鉍四合一（[RX-07]）；levofloxacin 三合一／四合一皆含 amoxicillin，不得顯示。"
+    }
+  ],
+  "refractoryRule": {
+    "when": {
+      "line": "refractory"
+    },
+    "action": "refer",
+    "headline": "兩次以上失敗：轉診消化內科做抗藥性檢測",
+    "detail": "依 [RX-06]，兩次以上治療失敗應轉診消化內科做抗藥性檢測後選藥；切勿重複相同處方，本工具不建三線規則。",
+    "sources": [
+      "RX-06"
+    ]
+  },
+  "retest": {
+    "timing": "吃完藥滿一個月（療程結束後 4 週）複檢",
+    "timingSource": "FU-01",
+    "stopRule": "複檢前停藥：PPI／P-CAB 停 2 週、抗生素與鉍劑停 4 週，否則細菌被壓制會驗成假陰性",
+    "stopRuleSource": "DX-06",
+    "method": "首選碳13呼氣試驗（UBT）；無法配合者用糞便抗原；不可用血液抗體（根除後仍可陽性 6–24 個月）",
+    "methodSource": "FU-01",
+    "paymentRules": [
+      {
+        "id": "ulcer-covered",
+        "when": {
+          "ulcer": "yes"
+        },
+        "status": "covered",
+        "headline": "複檢可走健保：30512C（碳13呼氣試驗）",
+        "detail": "有潰瘍診斷，符合 30512C 適應症②「證實為潰瘍併感染，除菌後療效確認與追蹤」（1,160 點；停藥後一個月施行一次）。",
+        "sources": [
+          "NHI-05"
+        ]
+      },
+      {
+        "id": "no-ulcer-age4574",
+        "when": {
+          "ulcer": "no",
+          "age4574": "yes"
+        },
+        "status": "selfpay_or_record",
+        "headline": "複檢無健保可走：自費，或以「確實服藥」紀錄替代",
+        "detail": "篩檢陽性、無潰瘍診斷者，30512C 仍卡在潰瘍適應症、3F 已於初次篩檢用掉，治療後複檢沒有健保代碼。實務兩條路：①自費複檢（各院所自訂）；②以「確實服藥」追蹤紀錄替代生物學複驗，上傳國健署系統（3F 補助 200 元所認可的追蹤方式）。",
+        "sources": [
+          "NHI-08",
+          "NHI-07",
+          "NHI-09"
+        ]
+      },
+      {
+        "id": "no-ulcer-other",
+        "when": {
+          "ulcer": "no"
+        },
+        "status": "selfpay",
+        "headline": "複檢需自費",
+        "detail": "無潰瘍診斷者沒有健保複檢代碼可走，需自費：碳13呼氣約 NT$500–1,500、糞便抗原約 NT$400–500（依各院所公告，非全國統一）。",
+        "sources": [
+          "NHI-08",
+          "NHI-09"
+        ]
+      },
+      {
+        "id": "ulcer-unknown",
+        "when": {
+          "ulcer": "unknown"
+        },
+        "status": "unconfirmed",
+        "headline": "先確認有無潰瘍診斷，再決定複檢給付",
+        "detail": "未確認潰瘍時，30512C 適用與否無法判定。若日後確認有潰瘍可走健保複檢；無潰瘍則需自費（呼氣約 500–1,500 元）或以「確實服藥」紀錄替代。",
+        "sources": [
+          "NHI-08",
+          "NHI-05",
+          "NHI-09"
+        ]
+      }
+    ]
+  },
+  "familyScreening": {
+    "headline": "同住家人一併篩檢，避免「乒乓球效應」",
+    "detail": "只治療單一帶菌者，容易被家人再傳回來；同住家人應先篩檢、陽性才治療（[FAM-03]）。45–74 歲家人可直接使用國健署終身一次公費糞便抗原篩檢（[POL-01]）；若已用掉該次機會則需自費。",
+    "sources": [
+      "FAM-03",
+      "POL-01"
+    ]
+  },
+  "warnings": {
+    "bloodAntibody": "⛔ 不要用血液抗體確認根除：根除成功後抗體仍可陽性 6–24 個月，會誤判為治療失敗、白吃第二輪藥（[DX-02]）",
+    "noStopRule": "⛔ 複檢前未停藥會假陰性：PPI／P-CAB 停 2 週、抗生素與鉍劑停 4 週（[DX-06]）",
+    "metronidazoleAlcohol": "⛔ metronidazole 治療期間及停藥後 48 小時嚴格禁酒（[RX-04]）",
+    "blackStool": "⚠ 鉍劑會造成黑便、黑舌，為無害現象，不需停藥（[RX-04]）",
+    "repeatRegimen": "⛔ 切勿重複相同處方：必須換用不同抗生素組合（[RX-06]）"
+  },
+  "disclaimer": "本工具依健保署與國健署現行規定（查證日 2026-08-09）整理，僅供臨床參考，不取代醫師之個別臨床判斷。給付規定會變動，處方前請核對健保署最新公告。本工具不收集任何病人資料，純前端計算、不留紀錄。",
+  "__END__": true
+};
+</script>
+<script>
+/* ═══ 內嵌決策引擎（由 build.js 從 src/engine.js 注入，勿手動編輯）═══ */
+/**
+ * 幽門螺旋桿菌（H. pylori）陽性處置決策引擎
+ *
+ * 單一真相來源：rules.json
+ * 診間決策工具與衛教單張共用此引擎，不得各自實作判斷邏輯。
+ *
+ * 用法（瀏覽器）：由 build.js 內嵌後，透過 window.HpEngine.decide(input) 呼叫
+ * 用法（Node）  ：const { decide } = require('./engine.js')
+ */
+
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) {
+    module.exports = factory(require('./rules.json'));
+  } else {
+    root.HpEngine = factory(root.HP_RULES);
+  }
+})(typeof self !== 'undefined' ? self : this, function (RULES) {
+  'use strict';
+
+  /**
+   * 依輸入條件找出對應的決策規則（decisionRules）
+   * @param {object} ctx { line, allergy }
+   * @returns 規則物件或 null
+   */
+  function resolveDecision(ctx) {
+    const rule = RULES.decisionRules.find(function (r) {
+      return r.when.line === ctx.line && r.when.allergy === ctx.allergy;
+    });
+    return rule || null;
+  }
+
+  /**
+   * 依複檢情境找出對應的給付規則（retest.paymentRules）
+   * 比對順序：先比對最明確的條件，規則陣列即為依精確度排列。
+   * @param {object} ctx { ulcer, age4574 }
+   * @returns 給付規則物件或 null
+   */
+  function resolvePayment(ctx) {
+    const rules = RULES.retest.paymentRules;
+    for (let i = 0; i < rules.length; i++) {
+      const w = rules[i].when;
+      // 以規則中「有寫的條件」逐一比對，未寫的條件不限制
+      let hit = true;
+      if (w.ulcer !== undefined && w.ulcer !== ctx.ulcer) hit = false;
+      if (w.age4574 !== undefined && w.age4574 !== ctx.age4574) hit = false;
+      if (hit) return rules[i];
+    }
+    return null;
+  }
+
+  /**
+   * 組出療程卡片的顯示資料
+   * @param {string} regimenId
+   * @returns 含名稱、藥品表、天數、備註、出處
+   */
+  function regimenView(regimenId) {
+    const r = RULES.regimens[regimenId];
+    if (!r) return null;
+    return {
+      id: r.id,
+      name: r.name,
+      fact: r.fact,
+      containsAmoxicillin: r.containsAmoxicillin,
+      drugs: r.drugs,
+      durationDays: r.durationDays,
+      durationNote: r.durationNote,
+      note: r.note,
+      sources: r.sources
+    };
+  }
+
+  /**
+   * 依 fact ID 查來源（出處）資料
+   * @param {string} id
+   * @returns 來源物件或 null
+   */
+  function sourceOf(id) {
+    return RULES.meta.sources[id] || null;
+  }
+
+  /** 收集給定 fact ID 清單對應的來源，去重且保序 */
+  function collectSources(ids) {
+    const seen = {};
+    const out = [];
+    (ids || []).forEach(function (id) {
+      const s = sourceOf(id);
+      if (s && !seen[id]) {
+        seen[id] = true;
+        out.push({ id: id, label: s.label, url: s.url, url2: s.url2, level: s.level, year: s.year });
+      }
+    });
+    return out;
+  }
+
+  /**
+   * 主判定函式
+   * @param {object} input
+   * @param {string} input.line       治療線別：first｜second｜refractory
+   * @param {string} input.allergy    penicillin 過敏：yes｜no
+   * @param {string} [input.ulcer]    有無潰瘍診斷：yes｜no｜unknown（不給時預設 unknown）
+   * @param {string} [input.age4574]  是否 45–74 歲：yes｜no（不給時預設 unknown）
+   */
+  function decide(input) {
+    const ctx = {
+      line: input.line,
+      allergy: input.allergy,
+      ulcer: input.ulcer || 'unknown',
+      age4574: input.age4574 || 'no'
+    };
+
+    // ── 兩次以上失敗：轉診，不給處方 ──
+    if (ctx.line === 'refractory') {
+      const ref = RULES.refractoryRule;
+      return {
+        input: ctx,
+        outcome: 'refer',
+        headline: ref.headline,
+        detail: ref.detail,
+        regimens: [],
+        retest: resolvePayment(ctx),
+        familyScreening: RULES.familyScreening,
+        warnings: [RULES.warnings.repeatRegimen],
+        basis: collectSources(ref.sources),
+        disclaimer: RULES.disclaimer,
+        rulesVersion: RULES.meta.version
+      };
+    }
+
+    // ── 一般決策（first / second）──
+    const rule = resolveDecision(ctx);
+    if (!rule) {
+      return {
+        input: ctx,
+        outcome: 'error',
+        headline: '條件組合無法判斷',
+        detail: '請確認治療線別與 penicillin 過敏欄位。',
+        regimens: [],
+        retest: null,
+        familyScreening: RULES.familyScreening,
+        warnings: [],
+        basis: [],
+        disclaimer: RULES.disclaimer,
+        rulesVersion: RULES.meta.version
+      };
+    }
+
+    const primary = regimenView(rule.primary);
+    const alternatives = (rule.alternatives || []).map(regimenView).filter(Boolean);
+
+    // 過敏防呆：若設定過敏卻出現含 amoxicillin 的處方，代表 rules.json 有 bug
+    const leaked = [primary].concat(alternatives).filter(function (r) {
+      return ctx.allergy === 'yes' && r && r.containsAmoxicillin;
+    });
+    if (leaked.length) {
+      return {
+        input: ctx,
+        outcome: 'error',
+        headline: '規則表錯誤：過敏者出現含 amoxicillin 處方',
+        detail: '請檢查 src/rules.json 的 decisionRules 設定（leaked: ' + leaked.map(function (r) { return r.id; }).join(',') + '）',
+        regimens: [],
+        retest: null,
+        familyScreening: RULES.familyScreening,
+        warnings: [],
+        basis: [],
+        disclaimer: RULES.disclaimer,
+        rulesVersion: RULES.meta.version
+      };
+    }
+
+    const payment = resolvePayment(ctx);
+    const allFactIds = [].concat(
+      rule.primary ? [rule.primary] : [],
+      rule.alternatives || [],
+      (primary ? primary.sources : []),
+      alternatives.reduce(function (a, r) { return a.concat(r.sources || []); }, []),
+      payment ? payment.sources : [],
+      [RULES.retest.timingSource, RULES.retest.stopRuleSource, RULES.retest.methodSource],
+      RULES.familyScreening.sources
+    );
+    const basis = collectSources(allFactIds);
+
+    // 警示收集
+    const warnings = [];
+    if (primary) {
+      const w = [];
+      if (primary.fact === 'RX-01' || primary.fact === 'RX-05') w.push(RULES.warnings.blackStool);
+      w.forEach(function (t) { if (warnings.indexOf(t) === -1) warnings.push(t); });
+    }
+    if (RULES.retest.timing) warnings.push('複檢時機：' + RULES.retest.timing + '（[FU-01]）');
+    if (RULES.retest.stopRule) warnings.push(RULES.retest.stopRule);
+    if (RULES.retest.method) warnings.push('複檢方式：' + RULES.retest.method);
+
+    return {
+      input: ctx,
+      outcome: 'treat',
+      headline: rule.headline,
+      note: rule.note,
+      primary: primary,
+      alternatives: alternatives,
+      regimens: [primary].concat(alternatives).filter(Boolean),
+      retest: payment,
+      familyScreening: RULES.familyScreening,
+      warnings: warnings,
+      basis: basis,
+      disclaimer: RULES.disclaimer,
+      rulesVersion: RULES.meta.version
+    };
+  }
+
+  return { decide: decide, RULES: RULES, regimenView: regimenView, sourceOf: sourceOf };
+});
+
+</script>
+<script>
+(function(){
+  'use strict';
+  var E = window.HpEngine, R = HP_RULES;
+  document.getElementById('rv').textContent = R.meta.version;
+  Array.prototype.forEach.call(document.querySelectorAll('.rv2'), function(el){ el.textContent = R.meta.version; });
+
+  /* 動態填入下拉選單 */
+  var lineSel = document.getElementById('line');
+  R.treatmentLines.forEach(function(o){
+    var op = document.createElement('option'); op.value = o.id; op.textContent = o.label; lineSel.appendChild(op);
+  });
+  var ulcerSel = document.getElementById('ulcer');
+  R.ulcerOptions.forEach(function(o){
+    var op = document.createElement('option'); op.value = o.id; op.textContent = o.label; ulcerSel.appendChild(op);
+  });
+  /* 本專案主要情境是「篩檢陽性、無潰瘍診斷」的病人（[POL-01]），
+     決策工具預設停在「無潰瘍診斷」，讓醫師一打開就看到正確的複檢付費對照。 */
+  ulcerSel.value = 'no';
+
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function drugTable(reg){
+    var h = '<table><thead><tr><th>藥物</th><th>劑量</th><th>頻次</th><th>注意</th></tr></thead><tbody>';
+    (reg.drugs||[]).forEach(function(d){
+      h += '<tr><td>' + esc(d.name) + '</td><td>' + esc(d.dose) + '</td><td>' + esc(d.freq) + '</td><td>' + esc(d.note) + '</td></tr>';
+    });
+    h += '</tbody></table>';
+    h += '<div class="note">療程 <b>' + reg.durationDays + ' 天</b>　—　' + esc(reg.durationNote) + '</div>';
+    return h;
+  }
+
+  function rxCard(reg, role){
+    var roleCls = role === 'primary' ? '' : ' alt';
+    var roleLabel = role === 'primary' ? '首選' : '替代選項';
+    var h = '<div class="rx"><div class="rxn">' + esc(reg.name)
+      + ' <span class="role' + roleCls + '">' + roleLabel + '</span></div>';
+    h += drugTable(reg);
+    if (reg.note) h += '<div class="warnbox">' + esc(reg.note) + '</div>';
+    h += '</div>';
+    return h;
+  }
+
+  function sourcesHtml(ids, RULES){
+    var seen = {}, out = [];
+    (ids||[]).forEach(function(id){
+      var s = RULES.meta.sources[id];
+      if (s && !seen[id]) { seen[id] = true; out.push({id:id, s:s}); }
+    });
+    if (!out.length) return '';
+    var h = '<div class="src"><b>依據與出處</b>：';
+    h += out.map(function(o){
+      var link = '<a href="' + esc(o.s.url) + '" target="_blank" rel="noopener">' + esc(o.s.label) + '</a>';
+      return '<span>[' + o.id + '] ' + link + '（' + esc(o.s.level) + (o.s.year && o.s.year !== '—' ? '，' + esc(o.s.year) : '') + '）</span>';
+    }).join('　');
+    h += '</div>';
+    return h;
+  }
+
+  function render(){
+    var r = E.decide({
+      line: lineSel.value,
+      allergy: document.getElementById('allergy').value,
+      ulcer: ulcerSel.value,
+      age4574: document.getElementById('age4574').value
+    });
+
+    var cls = r.outcome === 'treat' ? 'treat' : r.outcome === 'refer' ? 'refer' : 'error';
+    var h = '<div class="res ' + cls + '">';
+    h += '<div class="hl">' + esc(r.headline) + '</div>';
+
+    if (r.outcome === 'error') {
+      h += '<div class="badbox">' + esc(r.detail) + '</div>';
+    } else if (r.outcome === 'refer') {
+      h += '<div class="warnbox">' + esc(r.detail) + '</div>';
+    } else {
+      if (r.note) h += '<div class="src">' + esc(r.note) + '</div>';
+      if (r.primary) h += rxCard(r.primary, 'primary');
+      (r.alternatives||[]).forEach(function(a){ h += rxCard(a, 'alt'); });
+    }
+
+    /* 複檢付費狀態 */
+    if (r.retest) {
+      var payCls = r.retest.status === 'covered' ? 'okbox' : 'warnbox';
+      h += '<div class="' + payCls + '"><b>複檢付費狀態：</b>' + esc(r.retest.headline)
+        + '<div class="src">' + esc(r.retest.detail) + '</div></div>';
+    }
+
+    /* 警示 */
+    (r.warnings||[]).forEach(function(w){
+      var box = w.indexOf('⛔') === 0 ? 'badbox' : 'warnbox';
+      h += '<div class="' + box + '">' + esc(w) + '</div>';
+    });
+
+    /* 家庭篩檢 */
+    if (r.familyScreening) {
+      h += '<div class="src" style="margin-top:12px"><b>' + esc(r.familyScreening.headline) + '</b><br>'
+        + esc(r.familyScreening.detail) + '</div>';
+    }
+
+    /* 出處 */
+    h += sourcesHtml(r.basis.map(function(b){ return b.id; }), R);
+
+    h += '<div class="src" style="margin-top:12px">' + esc(r.disclaimer) + '</div>';
+    h += '</div>';
+    document.getElementById('out').innerHTML = h;
+  }
+
+  ['line','allergy','ulcer','age4574'].forEach(function(id){
+    document.getElementById(id).addEventListener('change', render);
+  });
+  render();
+})();
+</script>
+</body>
+</html>

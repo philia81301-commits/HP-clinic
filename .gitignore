@@ -9,3 +9,7 @@ node_modules/
 # 臨床資料與院內文件不進 repo
 *.xlsx
 *.csv
+
+# Playwright MCP �Ȧs��X
+.playwright-mcp/
+

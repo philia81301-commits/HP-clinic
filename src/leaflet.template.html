@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>幽門螺旋桿菌　病人衛教單張</title>
+<style>
+  /* 單面列印。紙張設為 A4 與 Letter 的「交集」210 × 279.4mm。
+     寬度取 A4（210 < Letter 的 215.9）、高度取 Letter（279.4 < A4 的 297）。
+     這個尺寸同時放得進兩種紙，兩邊都不會被裁、不需縮放，
+     因此影印機紙匣不論放 A4 或 Letter 都能直接印。
+     （不要寫成 size:Letter —— 那比 A4 寬 5.9mm，印在 A4 上會裁掉左右。）
+     目標 1 頁；若內容溢頁，先縮字級或行距，不要改成 size:Letter。 */
+  @page{ size:210mm 279.4mm; margin:10mm 15mm 12mm; }
+  :root{
+    --ink:#1a2430; --ink2:#4c5c68; --line:#cfdbe2;
+    --main:#0f4c5c; --soft:#e6f0f4; --ok:#1c6b48; --okbg:#e6f4ec;
+    --warn:#a45208; --warnbg:#fdf2e3; --bad:#8f2626; --badbg:#fbeced;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#eef2f5;color:var(--ink);
+    font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+    font-size:13.5px;line-height:1.38}
+  .page{width:210mm;margin:14px auto;padding:8mm 15mm 9mm;background:#fff;
+    box-shadow:0 2px 14px rgba(0,0,0,.12)}
+  h1{margin:0 0 2px;font-size:20px;color:var(--main);line-height:1.3}
+  .sub{margin:0;font-size:12.5px;color:var(--ink2)}
+  .hd{border-bottom:3px solid var(--main);padding-bottom:4px;margin-bottom:6px}
+  h2{font-size:15.5px;margin:5px 0 2px;color:var(--main);display:flex;align-items:center;gap:7px}
+  h2 .n{display:inline-flex;align-items:center;justify-content:center;
+    width:20px;height:20px;border-radius:50%;background:var(--main);color:#fff;font-size:12.5px;flex:none}
+  p{margin:2px 0}
+  .box{border-radius:8px;padding:4px 10px;margin:3px 0}
+  .box.main{background:var(--soft)}
+  .box.ok{background:var(--okbg)}
+  .box.ok p{margin:1px 0}
+  .box.warn{background:var(--warnbg)}
+  .box.bad{background:var(--badbg)}
+  .big{font-size:15.5px;font-weight:800;color:var(--main)}
+  table{border-collapse:collapse;width:100%;font-size:13px;margin:2px 0}
+  th,td{border:1px solid var(--line);padding:2px 7px;text-align:left;vertical-align:middle}
+  th{background:var(--soft);color:var(--main);font-weight:700;white-space:nowrap}
+  .yes{color:var(--ok);font-weight:800}
+  .no{color:var(--bad);font-weight:800}
+  .fine{font-size:12px;color:var(--ink2);line-height:1.36}
+  ul{margin:2px 0;padding-left:17px}
+  li{margin:0.5px 0}
+  .qa{margin:3px 0}
+  .qa dt{font-weight:800;color:var(--main);margin-top:1px;font-size:13.5px}
+  .qa dd{margin:0;color:var(--ink)}
+  .foot{margin-top:4px;padding-top:3px;border-top:1px solid var(--line);
+    font-size:10.5px;color:var(--ink2);line-height:1.34;
+    break-inside:avoid;page-break-inside:avoid}
+  .foot p{margin:0}
+  @media print{
+    body{background:#fff}
+    .page{width:auto;margin:0;padding:0;box-shadow:none}
+    h2,table,.box,.qa dt{break-inside:avoid;page-break-inside:avoid}
+    h2{break-after:avoid;page-break-after:avoid}
+  }
+  @media screen{
+    .page{min-height:279.4mm}
+  }
+  @media screen and (max-width:680px){
+    .page{width:auto;padding:16px}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hd">
+    <h1>幽門螺旋桿菌　您需要知道的事</h1>
+    <p class="sub">給陽性檢查結果的民眾與家屬　｜　請與醫師討論您的用藥方案</p>
+  </div>
+
+  <div class="box bad" style="margin-top:0">
+    <p class="big" style="color:var(--bad)">您的檢查結果為陽性：胃裡有幽門螺旋桿菌</p>
+    <p class="fine">這種細菌會長時間住在胃裡，可能造成胃潰瘍、胃炎，也是<strong>世界衛生組織認定的一級致癌物</strong>，
+    與胃癌有關。好消息是：<strong>只要按時服藥殺菌，風險可以大幅下降</strong>。</p>
+  </div>
+
+  <h2><span class="n">1</span>為什麼要治療？</h2>
+    <p>幽門螺旋桿菌感染後<b>不會自己好</b>，會一直待在胃裡。除菌後可降低胃潰瘍、胃癌的風險。
+    檢查陽性<b>不代表現在就會怎樣</b>，把它殺掉是保護自己的最直接方法。</p>
+
+  <h2><span class="n">2</span>怎麼治療？</h2>
+    <p>醫師會依您的情況開 <b>2～4 種藥</b>（胃藥＋抗生素），<b>連續服用約 14 天</b>。
+    請依醫囑、照藥袋標示按時服完，<b>不可自行停藥或減量</b>——沒吃完等於沒治。</p>
+    <table>
+      <tr><th>時間</th><th>該做的事</th></tr>
+      <tr><td><b>開始服藥</b></td><td>胃藥（PPI）建議<b>餐前 30–60 分鐘</b>服用</td></tr>
+      <tr><td><b>服藥期間</b></td><td><b>嚴格禁酒</b>；鉍劑可能讓<b>大便、舌頭變黑</b>，這是正常現象，不必擔心</td></tr>
+      <tr><td><b>吃完藥</b></td><td>四環黴素等藥品要<b>跟牛奶、鈣片、鐵劑隔開 2 小時</b>以上</td></tr>
+    </table>
+
+  <div class="box warn">
+    <p><b>最重要的兩件事</b>：① 服藥期間及停藥後 <b>48 小時內不能喝酒</b>（會引起嚴重不適）；
+    ② 大便變黑、舌頭變黑是<b>鉍劑的正常現象</b>，不是出血，不需要停藥。</p>
+  </div>
+
+  <h2><span class="n">3</span>吃完藥之後要做什麼？</h2>
+    <p><b>吃完最後一顆藥，滿一個月後</b>，回來複檢一次，確認細菌真的殺乾淨了。</p>
+    <div class="box main">
+      <p><b>複檢前的停藥提醒</b>：如果這段時間胃還是不舒服、自己去拿了胃藥，請注意——
+      檢查前 <b>胃藥（PPI）要停 2 週</b>、<b>抗生素與鉍劑要停 4 週</b>，
+      否則細菌會被壓制、驗出「假陰性」，白吃一輪藥。詳情請與您的主治醫師討論。</p>
+    </div>
+    <p class="fine">複檢方式是<b>吹氣檢查</b>（碳13呼氣試驗）或<b>糞便檢查</b>。<b>抽血驗抗體不能確認有沒有殺乾淨</b>。
+    請不要用抽血來驗。複檢若需自費，各院收費不同，請洽院所。</p>
+
+  <h2><span class="n">4</span>家裡的家人要一起檢查嗎？</h2>
+    <p>幽門螺旋桿菌<b>會傳染</b>，主要經由共用餐具、牙刷或餵食傳染，尤其是<b>小孩</b>。
+    只治療一個人，容易被家人再傳回來（像「乒乓球」一樣打來打去）。</p>
+    <div class="box ok">
+      <p><b>同住家人建議先篩檢、陽性才一起治療。</b>45–74 歲的家人，可使用政府
+      <b>終身一次免費糞便篩檢</b>；請詢問您的醫師或衛生所。</p>
+    </div>
+    <ul>
+      <li>盡量使用<b>公筷母匙</b>，不共用餐具、牙刷</li>
+      <li><b>不要用嘴巴嚼過食物再餵小孩</b></li>
+      <li>如廁後<b>確實洗手</b>，注意飲水與食物衛生</li>
+    </ul>
+
+  <h2><span class="n">5</span>常見疑問</h2>
+    <dl class="qa">
+      <dt>Q　我沒有不舒服，也要治療嗎？</dt>
+      <dd>建議治療。陽性代表細菌還在胃裡活動，除菌是降低胃癌風險的有效方法。</dd>
+      <dt>Q　治療會很痛苦嗎？</dt>
+      <dd>大部分人不會有明顯不適。常見是輕微噁心、嘴裡有金屬味、軟便，通常可以忍受。
+      若出現嚴重的紅疹、呼吸困難、嚴重腹瀉，請立即就醫。</dd>
+      <dt>Q　殺乾淨了還會再感染嗎？</dt>
+      <dd>成功殺菌後再感染的機率約 <b>1%</b>。維持良好飲食衛生、家人一起篩檢，
+      可把再感染的機會降到最低。</dd>
+    </dl>
+
+  <div class="box ok">
+    <p class="big" style="color:var(--ok)">帶走這三句話</p>
+    <p>① <b>按時把藥吃完</b>，服藥期間與停藥後 48 小時<b>不喝酒</b>。</p>
+    <p>② <b>吃完藥滿一個月回來複檢</b>；複檢前胃藥停 2 週。</p>
+    <p>③ <b>家人先篩檢、陽性再治療</b>，用公筷母匙，避免咀嚼餵食小孩。</p>
+  </div>
+
+  <div class="foot">
+    <p><b>資料來源</b>：衛生福利部健保署「藥品給付規定」、衛生福利部國民健康署公告與健康九九衛教素材；
+    資料查證日：<b>/*__VERIFIED_DATE__*/</b>。給付規定會變動，實際治療方案與費用請以您的主治醫師與院所為準。
+    本單張僅供衛教參考，<b>不能取代醫師的診斷與建議</b>。
+    　<b>資料整理</b>：潘醫師　｜　內容彙整由 AI 協助</p>
+  </div>
+
+</div>
+</body>
+</html>
