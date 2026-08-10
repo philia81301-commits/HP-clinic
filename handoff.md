@@ -60,4 +60,4 @@
 
 - 時間：2026-08-10
 - 更新者：opencode @ DESKTOP-LVSV9Q5
-- Git push：待推（L2 完成後回填）
+- Git push：✅ 已推（8d469aa）
