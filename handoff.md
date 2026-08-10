@@ -64,4 +64,4 @@
 
 - 時間：2026-08-10
 - 更新者：opencode @ DESKTOP-LVSV9Q5
-- Git push：待推（本次 commit 後回填）
+- Git push：❌ 未推（使用者指示先不 push，本機 commit 936db5b 已完成；下次開工 `git push` 即可）
