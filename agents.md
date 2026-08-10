@@ -22,13 +22,13 @@
   - [x] 釐清核心落差：**篩檢陽性無潰瘍者，治療後複檢無健保代碼可走**（見 [NHI-08]）
   - [ ] 17 條 🔲 待溯源（各檔檔尾），依「補不到就降級」或「補不到就不寫」兩種方式處理
 - [ ] **階段二：診間決策工具＋病人衛教單張** —— 共用同一份 `src/rules.json`
-  - [x] `src/rules.json` v1.0.0（20 條 sources、6 個療程、4 條決策規則、4 條給付規則）
+  - [x] `src/rules.json` v1.0.0（21 條 sources、6 個療程、4 條決策規則、4 條給付規則）
   - [x] `src/engine.js` 決策引擎（Node 驗證 5 情境全對，含 penicillin 過敏防呆）
   - [x] `src/build.js` 產出 `output/` 兩份 HTML（決策工具＋衛教單張）
   - [x] `src/serve.js` 本機預覽（http://127.0.0.1:8765）
   - [x] Playwright 驗證：決策工具四情境全對（含過敏分支無洩漏 amoxicillin）
-  - [ ] **衛教單張仍未壓進 1 頁**（footer 溢到第二頁，headless 字體 fallback 所致，需以 PDF 實渲染為準再縮）
-  - [ ] `src/engine.test.js`（窮舉＋情境測試）
+  - [x] **衛教單張已壓回 1 頁**（Chrome exe 實渲染驗證，footer 距底線 19pt 餘裕）
+  - [x] `src/engine.test.js`（128 項全過：窮舉＋RDQ 情境＋無孤兒建議）
   - [ ] `src/acceptance.py`（對 RDQ 驗收條件）
 - [ ] **階段三：整理報告（HTML）＋簡報（PPTX）**
 
@@ -46,7 +46,7 @@ HP-clinic/
 │   ├─ 04-健保給付與申報.md        ← 官方出處密度最高，含 [NHI-08] 核心結論
 │   ├─ 05-複檢與追蹤.md
 │   └─ 06-家庭篩檢與同時治療.md
-├─ src/               規則引擎與產生腳本（rules.json、engine.js、build.js、serve.js、*.template.html）
+├─ src/               規則引擎與產生腳本（rules.json、engine.js、build.js、serve.js、engine.test.js、*.template.html）
 └─ output/            三份成品（HTML × 3、PPTX × 1）
 ```
 
