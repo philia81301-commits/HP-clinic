@@ -29,7 +29,7 @@
   - [x] Playwright 驗證：決策工具四情境全對（含過敏分支無洩漏 amoxicillin）
   - [x] **衛教單張已壓回 1 頁**（Chrome exe 實渲染驗證，footer 距底線 19pt 餘裕）
   - [x] `src/engine.test.js`（128 項全過：窮舉＋RDQ 情境＋無孤兒建議）
-  - [ ] `src/acceptance.py`（對 RDQ 驗收條件）
+  - [x] `src/acceptance.py`（對 RDQ 驗收條件：19 項 PASS，驗收全綠；36 條 WARN 為資料層已知待溯源）
 - [ ] **階段三：整理報告（HTML）＋簡報（PPTX）**
 
 ## 資料夾結構
@@ -46,7 +46,7 @@ HP-clinic/
 │   ├─ 04-健保給付與申報.md        ← 官方出處密度最高，含 [NHI-08] 核心結論
 │   ├─ 05-複檢與追蹤.md
 │   └─ 06-家庭篩檢與同時治療.md
-├─ src/               規則引擎與產生腳本（rules.json、engine.js、build.js、serve.js、engine.test.js、*.template.html）
+├─ src/               規則引擎與產生腳本（rules.json、engine.js、build.js、serve.js、engine.test.js、acceptance.py、*.template.html）
 └─ output/            三份成品（HTML × 3、PPTX × 1）
 ```
 
