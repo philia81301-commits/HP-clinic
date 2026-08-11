@@ -133,6 +133,21 @@ ok('情境 refractory：警示包含「切勿重複相同處方」',
   });
 });
 
+// ── 4h. 警示不漏接：規則表定義的 bloodAntibody／metronidazoleAlcohol 必須真的出現在輸出裡 ──
+console.log('▶ 警示不漏接（回歸測試：曾發生規則表定義了但 decide() 沒 push 的 bug）');
+['first', 'second'].forEach(line => {
+  ['yes', 'no'].forEach(a => {
+    const r = decide({ line: line, allergy: a });
+    ok(`warnings 含 bloodAntibody（line=${line} allergy=${a}）`,
+      r.warnings.indexOf(RULES.warnings.bloodAntibody) !== -1, r.warnings);
+    const hasMetro = r.regimens.some(rg => (rg.drugs || []).some(d => d.name === 'Metronidazole'));
+    if (hasMetro) {
+      ok(`warnings 含 metronidazoleAlcohol（line=${line} allergy=${a}，處方含 metronidazole）`,
+        r.warnings.indexOf(RULES.warnings.metronidazoleAlcohol) !== -1, r.warnings);
+    }
+  });
+});
+
 // ── 5. 完整性：regimens / decisionRules / retest 引用皆存在，無孤兒建議 ──
 console.log('▶ 結構完整性');
 Object.keys(RULES.regimens).forEach(id => {

@@ -181,11 +181,17 @@
 
     // 警示收集
     const warnings = [];
+    const allRegimens = [primary].concat(alternatives).filter(Boolean);
     if (primary) {
       const w = [];
       if (primary.fact === 'RX-01' || primary.fact === 'RX-05') w.push(RULES.warnings.blackStool);
+      const hasMetronidazole = allRegimens.some(function (r) {
+        return (r.drugs || []).some(function (d) { return d.name === 'Metronidazole'; });
+      });
+      if (hasMetronidazole) w.push(RULES.warnings.metronidazoleAlcohol);
       w.forEach(function (t) { if (warnings.indexOf(t) === -1) warnings.push(t); });
     }
+    warnings.push(RULES.warnings.bloodAntibody);
     if (RULES.retest.timing) warnings.push('複檢時機：' + RULES.retest.timing + '（[FU-01]）');
     if (RULES.retest.stopRule) warnings.push(RULES.retest.stopRule);
     if (RULES.retest.method) warnings.push('複檢方式：' + RULES.retest.method);

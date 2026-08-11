@@ -1,10 +1,12 @@
 {
   "meta": {
-    "version": "1.0.0",
-    "updated": "2026-08-10",
+    "version": "1.0.2",
+    "updated": "2026-08-12",
     "verifiedDate": "2026-08-09",
     "changelog": [
-      "1.0.0（2026-08-10）初版：第一／二線與複檢付費決策樹，對齊 data/ 六份資料層，每條輸出帶 fact ID"
+      "1.0.0（2026-08-10）初版：第一／二線與複檢付費決策樹，對齊 data/ 六份資料層，每條輸出帶 fact ID",
+      "1.0.1（2026-08-12）修 bug：engine.js 的警示收集漏接 bloodAntibody／metronidazoleAlcohol，兩條規則表已定義的安全警語從未輸出；修正 bloodAntibody 的斷鏈引用 [DX-02]→[FU-01]（同一事實已在 retest.method 用 FU-01 佐證，[DX-02] 是 data/ 已知的待溯源條目，不適合放進使用者看得到的引用清單）；PPI 補上範例劑量（esomeprazole 40mg 或 rabeprazole 20mg，其餘成分依院內劑型換算），沿用既有 [RX-04]，未新增來源",
+      "1.0.2（2026-08-12）新增 [PPI-01]：完整 PPI 學名／商品名／除菌劑量對照表（6 個成分），補進 data/03-處方與抗藥性.md 並掛回決策工具 5 個含 PPI 處方；BID 劑量數字本身標 🔲 待溯源（引用一般臨床常識，非官方指引原文）"
     ],
     "description": "幽門螺旋桿菌（H. pylori）陽性處置決策規則表。診間決策工具與衛教單張共用此檔，不得各自實作判斷邏輯。",
     "sourceHierarchy": {
@@ -146,6 +148,13 @@
         "url": "https://www.ntuh.gov.tw/ckfinder_file/labmed/files/幽門螺旋桿菌碳十三呼氣檢查.pdf",
         "level": "非官方（台大醫院檢查說明）",
         "year": "—"
+      },
+      "PPI-01": {
+        "label": "常用 PPI 學名／商品名／除菌治療劑量對照：院內用藥衛教單張整理；BID 劑量數字引用一般臨床常識，原始指引條文（Maastricht VI／ACG）尚未溯源",
+        "url": "https://www.ntch.ntpc.gov.tw/uploaddowndoc?file=ntch04%2F202106211048540.pdf",
+        "url2": "https://www.eck.org.tw/wp-content/uploads/2021/10/K010_Lansoprazole.pdf",
+        "level": "非官方（用藥衛教單張整理；BID 劑量待溯源）",
+        "year": "查詢日 2026-08-12"
       }
     }
   },
@@ -180,7 +189,7 @@
       "line": "first",
       "containsAmoxicillin": false,
       "drugs": [
-        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘" },
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘；依院內劑型擇一常用 BID 劑量，完整成分／商品名／mg 對照見 [PPI-01]" },
         { "name": "Tetracycline", "dose": "500 mg", "freq": "QID", "note": "與乳製品、制酸劑、鐵劑間隔 2 小時以上" },
         { "name": "Metronidazole", "dose": "500 mg", "freq": "TID", "note": "治療期間及停藥後 48 小時嚴格禁酒" },
         { "name": "Bismuth subcitrate", "dose": "120–300 mg", "freq": "QID", "note": "黑便、黑舌為無害現象，不需停藥" }
@@ -188,7 +197,7 @@
       "durationDays": 14,
       "durationNote": "文獻 10–14 天；健保給付以 2 週為原則（[NHI-02]），成品一律建議 14 天",
       "note": "擔心抗藥性時首選；penicillin 過敏者適用（不含 amoxicillin）",
-      "sources": ["RX-01", "RX-04", "NHI-02"]
+      "sources": ["RX-01", "RX-04", "NHI-02", "PPI-01"]
     },
     "concomitantQuadruple": {
       "id": "concomitantQuadruple",
@@ -197,7 +206,7 @@
       "line": "first",
       "containsAmoxicillin": true,
       "drugs": [
-        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘" },
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘；依院內劑型擇一常用 BID 劑量，完整成分／商品名／mg 對照見 [PPI-01]" },
         { "name": "Amoxicillin", "dose": "1 g", "freq": "BID", "note": "" },
         { "name": "Clarithromycin", "dose": "500 mg", "freq": "BID", "note": "" },
         { "name": "Metronidazole", "dose": "500 mg", "freq": "BID", "note": "治療期間及停藥後 48 小時嚴格禁酒" }
@@ -205,7 +214,7 @@
       "durationDays": 14,
       "durationNote": "療程 14 天（[RX-02]）",
       "note": "鉍劑不易取得、或無法配合一日四次（QID）服藥時選用",
-      "sources": ["RX-02", "NHI-02"]
+      "sources": ["RX-02", "NHI-02", "RX-04", "PPI-01"]
     },
     "vonoprazanTriple": {
       "id": "vonoprazanTriple",
@@ -230,7 +239,7 @@
       "line": "second",
       "containsAmoxicillin": false,
       "drugs": [
-        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘" },
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘；依院內劑型擇一常用 BID 劑量，完整成分／商品名／mg 對照見 [PPI-01]" },
         { "name": "Bismuth subcitrate", "dose": "120–300 mg", "freq": "QID", "note": "黑便、黑舌為無害現象" },
         { "name": "Tetracycline", "dose": "500 mg", "freq": "QID", "note": "與乳製品間隔 2 小時以上" },
         { "name": "Metronidazole", "dose": "500 mg", "freq": "TID", "note": "治療期間及停藥後 48 小時嚴格禁酒" }
@@ -238,7 +247,7 @@
       "durationDays": 14,
       "durationNote": "依健保 2 週為原則（[NHI-02]）",
       "note": "根除率約 85–90%；二線首選，penicillin 過敏者唯一選項（[RX-07]）",
-      "sources": ["RX-05", "RX-07", "NHI-03", "NHI-02"]
+      "sources": ["RX-05", "RX-07", "NHI-03", "NHI-02", "RX-04", "PPI-01"]
     },
     "levofloxacinTriple": {
       "id": "levofloxacinTriple",
@@ -247,14 +256,14 @@
       "line": "second",
       "containsAmoxicillin": true,
       "drugs": [
-        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "" },
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘；依院內劑型擇一常用 BID 劑量，完整成分／商品名／mg 對照見 [PPI-01]" },
         { "name": "Levofloxacin", "dose": "500 mg", "freq": "QD", "note": "" },
         { "name": "Amoxicillin", "dose": "1 g", "freq": "BID", "note": "" }
       ],
       "durationDays": 14,
       "durationNote": "療程約 10–14 天（[RX-05]）",
       "note": "根除率約 80%；⚠ 台灣 levofloxacin 抗藥率 2019 年已達 38.8%，成功率可能低於表列（[AMR-01]）",
-      "sources": ["RX-05", "AMR-01"]
+      "sources": ["RX-05", "AMR-01", "RX-04", "PPI-01"]
     },
     "levofloxacinQuadruple": {
       "id": "levofloxacinQuadruple",
@@ -263,7 +272,7 @@
       "line": "second",
       "containsAmoxicillin": true,
       "drugs": [
-        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "" },
+        { "name": "PPI", "dose": "1 顆", "freq": "BID", "note": "餐前 30–60 分鐘；依院內劑型擇一常用 BID 劑量，完整成分／商品名／mg 對照見 [PPI-01]" },
         { "name": "Levofloxacin", "dose": "500 mg", "freq": "QD", "note": "" },
         { "name": "Amoxicillin", "dose": "1 g", "freq": "BID", "note": "" },
         { "name": "Bismuth subcitrate", "dose": "120–300 mg", "freq": "QID", "note": "黑便、黑舌為無害現象" }
@@ -271,7 +280,7 @@
       "durationDays": 14,
       "durationNote": "療程約 10–14 天（[RX-05]）",
       "note": "根除率約 85%；⚠ 同受 levofloxacin 抗藥影響（[AMR-01]）",
-      "sources": ["RX-05", "AMR-01"]
+      "sources": ["RX-05", "AMR-01", "RX-04", "PPI-01"]
     }
   },
 
@@ -368,7 +377,7 @@
   },
 
   "warnings": {
-    "bloodAntibody": "⛔ 不要用血液抗體確認根除：根除成功後抗體仍可陽性 6–24 個月，會誤判為治療失敗、白吃第二輪藥（[DX-02]）",
+    "bloodAntibody": "⛔ 不要用血液抗體確認根除：根除成功後抗體仍可陽性 6–24 個月，會誤判為治療失敗、白吃第二輪藥（[FU-01]）",
     "noStopRule": "⛔ 複檢前未停藥會假陰性：PPI／P-CAB 停 2 週、抗生素與鉍劑停 4 週（[DX-06]）",
     "metronidazoleAlcohol": "⛔ metronidazole 治療期間及停藥後 48 小時嚴格禁酒（[RX-04]）",
     "blackStool": "⚠ 鉍劑會造成黑便、黑舌，為無害現象，不需停藥（[RX-04]）",
