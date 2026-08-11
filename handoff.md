@@ -67,4 +67,4 @@
 
 - 時間：2026-08-12
 - 更新者：Claude Code @ DESKTOP-LVSV9Q5
-- Git push：待推（本次 handoff／agents.md 更新，跟 `da73d3a` 的程式碼修正一起收工推）
+- Git push：✅ 已推（9893005，程式碼修正見 da73d3a）
