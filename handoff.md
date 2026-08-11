@@ -4,20 +4,25 @@
 
 ## ⏯️ 目前做到哪
 
-**階段二（決策工具＋衛教單張）全部完成，含驗收。**
+**階段二完成後的 bug 修復＋內容補強（2026-08-12）。**
 
-- `src/acceptance.py` 完成並驗收全綠（19 PASS／0 FAIL）：A 資料層、B 可離線、C 無孤兒建議、D 衛教 1 頁（Chrome 實渲染）四組全過
-- 修正 acceptance.py 兩處誤判：出處行判斷只認 `出處[:：]`（不再把「出處薄弱／出處為」當出處行）；新增「同 [ID]」引用有效性檢查
-- `data/01` 補 [EPI-02] 位階行（原本缺位階，A1 檢查抓出）
-- 兩份成品已複製到 OneDrive `文件\HP-clinic_成品\`（準備發給同仁），**分享連結尚未產生**
+潘醫師請 Claude Code 讀決策工具 HTML 抓問題，抓到並修好：
+
+- `engine.js` 的 `decide()` 警示收集**漏接兩條規則表已定義的安全警語**：`bloodAntibody`（不可用血液抗體確認根除）與 `metronidazoleAlcohol`（服藥期間禁酒）——規則表寫了，前端永遠不會顯示。已修，並在 `engine.test.js` 加兩條回歸測試鎖住
+- `bloodAntibody` 的引用標籤 `[DX-02]` 是斷鏈（`meta.sources` 沒有這個 key，雖然 `data/02` 有這個 fact 但屬「待溯源」等級），改引用同一事實已經在用的 `[FU-01]`
+- 新增 `data/03-處方與抗藥性.md` 的 `[PPI-01]`：6 個 PPI 成分（esomeprazole／lansoprazole／omeprazole／pantoprazole／rabeprazole／dexlansoprazole）的學名／台灣商品名／常見錠劑規格／除菌 BID 劑量對照表，掛回決策工具 5 個含 PPI 處方；**BID 劑量數字本身仍標 🔲 待溯源**（引用一般臨床常識，非官方指引原文，尚待補實）
+- 決策工具＋衛教單張頁尾加註署名「高雄榮總家庭醫學部　潘醫師」（潘醫師本人要求，見 agents.md 署名慣例段）
+- `rules.json` 版本 1.0.0 → 1.0.2；`engine.test.js` 151 項全過；`acceptance.py` 19 PASS／0 FAIL
+- 已 commit + push（`da73d3a`）
+- **OneDrive `文件\HP-clinic_成品\` 的發送用副本已同步成修好的版本**（原本是 bug 修復前的舊版，這次一併更新）；資料夾內另有一個「病人衛教單張 複製.html」疑似重複檔，尚未處理，留給潘醫師確認要不要刪
 
 ## 🚦 目前狀態
 
 - `rdq/RDQ-spec-hpylori-treatment-20260809.md`：已確認、需求凍結
-- `data/`：01–06 六份（階段一）；7 條 🔲 待溯源 fact（AMR-03、DX-02、EPI-02、EPI-03、EPI-04、FU-03、FU-05）不擋階段三
-- `src/`：rules.json v1.0.0、engine.js、build.js、serve.js、**engine.test.js（128 項全過）**、**acceptance.py**、兩個 template 齊備
-- `output/`：兩份 HTML（決策＋衛教，衛教 1 頁）
-- OneDrive `文件\HP-clinic_成品\`：兩份 HTML（發送用副本）
+- `data/`：01–06 六份；7 條 🔲 待溯源 fact（AMR-03、DX-02、EPI-02、EPI-03、EPI-04、FU-03、FU-05，跟上次一樣，PPI-01 本身有部分出處不算在這清單裡）不擋階段三
+- `src/`：rules.json **v1.0.2**、engine.js、build.js、serve.js、**engine.test.js（151 項全過）**、**acceptance.py（19 PASS／0 FAIL）**、兩個 template 齊備
+- `output/`：兩份 HTML（決策＋衛教，衛教 1 頁），皆為最新版
+- OneDrive `文件\HP-clinic_成品\`：兩份 HTML，**已同步為最新版**（發送用副本）
 
 ## ⭐ 本階段最重要的發現（決策工具已實作）
 
@@ -40,6 +45,8 @@
 
 ## ⚠️ 注意事項
 
+- **改了 `output/` 的成品內容，記得同步更新 OneDrive `文件\HP-clinic_成品\` 的發送用副本**（這次就是漏了這步才發現舊版還帶著 bug；`cp output/*.html` 到那個資料夾即可）
+- **署名固定寫「高雄榮總家庭醫學部　潘醫師」**（決策工具與衛教單張頁尾都有），改版面時不要漏掉或改掉這行
 - **兩台電腦都放 `C:\projects\HP-clinic\`**，開工前 `git pull`、收工後 `git push`；不要放進 OneDrive 或 Google 雲端硬碟（**注意：`HP-clinic_成品` 副本例外的放在 OneDrive，那是發送用）**
 - **repo 私有**，內含健保給付條文，不得轉公開、不得開 GitHub Pages；GitHub 私人 repo 無法給「免登入」連結，發送一律靠聊天室／OneDrive 分享／隨身碟
 - 原始素材（3 份 docx）在 `C:\Users\phili\Downloads\`，用 pandoc 轉 md，**不要直接讀 docx**
@@ -58,6 +65,6 @@
 
 ## 🕐 最後更新
 
-- 時間：2026-08-10
-- 更新者：opencode @ DESKTOP-LVSV9Q5
-- Git push：✅ 已推（8d469aa）
+- 時間：2026-08-12
+- 更新者：Claude Code @ DESKTOP-LVSV9Q5
+- Git push：待推（本次 handoff／agents.md 更新，跟 `da73d3a` 的程式碼修正一起收工推）
