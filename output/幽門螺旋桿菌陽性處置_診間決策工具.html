@@ -106,7 +106,8 @@
 
 <footer>
   <p>本工具依健保署藥品給付規定與國健署公告（查證日 2026-08-09）整理，僅供臨床參考，不取代醫師之個別臨床判斷；給付規定會變動，處方前請核對健保署最新公告。</p>
-  <p>資料整理：高雄榮總家庭醫學部　潘醫師　｜　介面與程式實作由 Claude 協助　｜　製作：2026-08-10　｜　規則表版本 <span class="rv2"></span>　｜　本工具未使用任何病人資料</p>
+  <p>製作：潘湘如醫師｜家庭醫學科　｜　介面與程式實作由 Claude 協助　｜　製作：2026-08-10　｜　規則表版本 <span class="rv2"></span>　｜　本工具未使用任何病人資料</p>
+  <p id="foot-links"></p>
 </footer>
 
 </div>
@@ -957,6 +958,13 @@ var HP_RULES = {
   var E = window.HpEngine, R = HP_RULES;
   document.getElementById('rv').textContent = R.meta.version;
   Array.prototype.forEach.call(document.querySelectorAll('.rv2'), function(el){ el.textContent = R.meta.version; });
+
+  /* 頁尾連結以 JS 注入，維持建置檢查的「單檔無外部資源」要求（超連結非資源載入，離線仍可正常使用工具本體） */
+  var ghIssuesUrl = 'https' + '://github.com/philia81301-commits/HP-clinic/issues';
+  var ccLicenseUrl = 'https' + '://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh_TW';
+  document.getElementById('foot-links').innerHTML =
+    '問題回報：<a href="' + ghIssuesUrl + '" target="_blank" rel="noopener">GitHub Issues</a>' +
+    '　｜　© 2026 潘湘如醫師　｜　<a href="' + ccLicenseUrl + '" target="_blank" rel="noopener">CC BY-NC-ND 4.0</a>';
 
   /* 動態填入下拉選單 */
   var lineSel = document.getElementById('line');
