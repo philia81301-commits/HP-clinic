@@ -10,6 +10,8 @@ node_modules/
 *.xlsx
 *.csv
 
-# Playwright MCP �Ȧs��X
+# Playwright MCP 暫存輸出
 .playwright-mcp/
 
+# deck/ 驗收用自製渲染預覽，可重生成，不進 repo
+deck/preview/

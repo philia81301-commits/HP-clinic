@@ -1,0 +1,275 @@
+schema_version: "yaml_image_deck_v1"
+
+deck:
+  title: "幽門螺旋桿菌陽性處置：病人衛教圖卡"
+  audience: "幽門螺旋桿菌檢查陽性的病人與家屬"
+  purpose: "把病人衛教單張的內容轉成好懂、好記的圖片簡報，強化按時服藥、48小時禁酒、滿月複檢、家人先篩檢四個關鍵行動"
+  takeaway: "按時吃完藥、服藥期間禁酒、滿一個月回來複檢、家人先篩檢再治療"
+  language: "zh-TW"
+  output_mode: "plate"
+  planning_mode: "yaml_spec"
+  generation_strategy: "sequential"
+  style_lock: "golden_sample"
+  slide_count: 11
+
+canvas:
+  target_ratio: "16:9"
+  safe_area_pct: {left: 6, right: 6, top: 10, bottom: 12}
+  pptx_size_in: {width: 13.333, height: 7.5}
+
+design_system:
+  visual_direction: "溫暖、平靜、友善的衛教扁平插畫風格；圓潤有機造型、柔和光影、不寫實不驚悚，像診間衛教海報而非醫學教科書插圖"
+  palette:
+    background: "#F7F3EA"
+    primary: "#0F4C5C"
+    text: "#1A2430"
+    text_soft: "#4C5C68"
+    accent_ok: "#1C6B48"
+    accent_ok_bg: "#E6F4EC"
+    accent_warn: "#C46A1A"
+    accent_warn_bg: "#FDF2E3"
+    accent_bad: "#8F2626"
+    accent_bad_bg: "#FBECED"
+  typography:
+    font_feel: "粗圓、飽滿、低稜角的繁體中文無襯線字"
+    avoid: "尖角、窄長、機械感、科技模板字、細筆畫、書法體"
+    plate_font_preferences:
+      - "jf-openhuninn-2.1"
+      - "GenSenRounded TW"
+      - "GenJyuuGothic"
+    plate_font_installed: "jf-openhuninn-2.1"
+  style_reference: "slides/images/page_04.png"
+  negative_prompt:
+    - "不要出現任何文字、字母或數字（純視覺插畫，文字後製疊加）"
+    - "不要 Logo 或浮水印"
+    - "不要螢幕、投影幕、手機或簡報 mockup"
+    - "不要寫實、血腥或驚悚的病理／醫療畫面"
+    - "不要尖角科技感圖形，維持圓潤有機造型"
+
+layout_router:
+  focus: "cover_hero, question_focus"
+  contrast: "comparison_split"
+  sequence: "process_timeline"
+  classification: "classification_grid"
+  scenario: "case_scene_analysis"
+  causal: "relationship_map"
+  metric: "data_focus"
+  synthesis: "summary_three"
+  action: "action_next_step"
+
+slides:
+  - page: 1
+    role: "cover"
+    core_point: "介紹主題：幽門螺旋桿菌陽性後該知道的事"
+    semantic_structure: "focus"
+    layout: {id: "cover_hero", variant: "left_title_right_visual"}
+    visible_text:
+      title: "幽門螺旋桿菌"
+      subtitle: "您需要知道的事"
+      tag: "陽性檢查結果衛教"
+    visual: "右側大面積插畫：友善圓潤的胃部器官造型，表面有一顆放大鏡溫柔照著幾隻圓滾滾的卡通幽門螺旋桿菌圖案，色調沉穩溫暖，左側 40% 留白作為標題安全區"
+    output: "slides/images/page_01.png"
+    overlay_blocks:
+      - {text: "幽門螺旋桿菌", x: 0.9, y: 2.2, w: 6.2, h: 1.3, font_pt: 54, weight: "bold", color: "primary", align: "left"}
+      - {text: "您需要知道的事", x: 0.9, y: 3.5, w: 6.2, h: 1.0, font_pt: 36, weight: "bold", color: "text", align: "left"}
+      - {text: "陽性檢查結果衛教｜高雄榮總家庭醫學部　潘醫師", x: 0.9, y: 4.6, w: 6.2, h: 0.6, font_pt: 16, weight: "regular", color: "text_soft", align: "left"}
+
+  - page: 2
+    role: "alert"
+    core_point: "檢查結果為陽性，說明是什麼、為什麼重要，但強調可治療"
+    semantic_structure: "focus"
+    layout: {id: "question_focus", variant: "central_message"}
+    visible_text:
+      title: "檢查結果：陽性"
+      line1: "胃裡有幽門螺旋桿菌"
+      tag: "世界衛生組織列為一級致癌物"
+      reassure: "按時服藥殺菌，風險可大幅下降"
+    visual: "中央置中構圖：一顆溫和的胃部造型插畫，周圍以柔和的暖橘色警示光暈標示，但整體色調仍偏沉穩而非驚恐；下方角落畫一顆帶著笑臉、正在被藥丸包圍變小的細菌圖案，暗示可被治療，傳達「嚴肅但有解方」的氛圍"
+    output: "slides/images/page_02.png"
+    overlay_blocks:
+      - {text: "檢查結果：陽性", x: 1.0, y: 0.4, w: 11.3, h: 0.9, font_pt: 40, weight: "bold", color: "accent_bad", align: "center"}
+      - {text: "胃裡有幽門螺旋桿菌", x: 1.0, y: 1.75, w: 11.3, h: 0.7, font_pt: 24, weight: "bold", color: "text", align: "center"}
+      - {text: "世界衛生組織列為一級致癌物", x: 1.0, y: 2.45, w: 11.3, h: 0.6, font_pt: 18, weight: "regular", color: "text_soft", align: "center"}
+      - {text: "按時服藥殺菌，風險可大幅下降", x: 1.0, y: 7.0, w: 11.3, h: 0.4, font_pt: 20, weight: "bold", color: "accent_ok", align: "center"}
+
+  - page: 3
+    role: "reason"
+    core_point: "解釋為什麼要治療：不會自己好、除菌降低胃潰瘍與胃癌風險"
+    semantic_structure: "causal"
+    layout: {id: "relationship_map", variant: "cause_effect_chain"}
+    visible_text:
+      title: "為什麼要治療？"
+      chain: ["感染不會自己好", "除菌降低胃潰瘍風險", "除菌降低胃癌風險"]
+    visual: "由左至右三個圓形插畫節點以柔和箭頭串連：第一個畫一隻小小的細菌安穩窩在胃壁裡；第二個畫胃壁上的潰瘍傷口逐漸癒合；第三個畫胃部整體被溫暖的守護光罩包住，象徵風險下降，整體圓潤卡通化不寫實"
+    output: "slides/images/page_03.png"
+    overlay_blocks:
+      - {text: "為什麼要治療？", x: 0.9, y: 0.6, w: 11.5, h: 0.9, font_pt: 34, weight: "bold", color: "primary", align: "left"}
+      - {text: "感染不會自己好", x: 0.7, y: 5.6, w: 3.6, h: 1.0, font_pt: 18, weight: "bold", color: "text", align: "center"}
+      - {text: "除菌降低胃潰瘍風險", x: 4.9, y: 5.6, w: 3.6, h: 1.0, font_pt: 18, weight: "bold", color: "text", align: "center"}
+      - {text: "除菌降低胃癌風險", x: 9.1, y: 5.6, w: 3.6, h: 1.0, font_pt: 18, weight: "bold", color: "text", align: "center"}
+
+  - page: 4
+    role: "treatment_overview"
+    core_point: "治療方案總覽：2–4種藥、連續服用14天、不可自行停藥"
+    semantic_structure: "metric"
+    layout: {id: "data_focus", variant: "big_number_conclusion"}
+    visible_text:
+      title: "怎麼治療？"
+      big_number: "14"
+      big_number_unit: "天"
+      caption: "連續服藥完成療程"
+      subtext: "醫師會開 2–4 種藥（胃藥＋抗生素），不可自行停藥或減量"
+    visual: "中央一個巨大圓潤的日曆插畫，其中一段連續 14 格被溫暖的主色填滿並用小藥丸圖示標記，象徵連續服藥的療程；周圍散落幾顆造型可愛的藥丸與膠囊插畫元素，色調沉穩溫暖"
+    output: "slides/images/page_04.png"
+    overlay_blocks:
+      - {text: "怎麼治療？", x: 0.9, y: 0.6, w: 11.5, h: 0.9, font_pt: 34, weight: "bold", color: "primary", align: "left"}
+      - {text: "14天", x: 4.9, y: 2.769, w: 3.5, h: 1.262, font_pt: 75, weight: "bold", color: "primary", align: "center"}
+      - {text: "連續服藥完成療程", x: 3.9, y: 5.165, w: 5.5, h: 0.37, font_pt: 22, weight: "bold", color: "text", align: "center"}
+      - {text: "醫師會開 2–4 種藥（胃藥＋抗生素），不可自行停藥或減量", x: 1.5, y: 6.55, w: 10.3, h: 0.7, font_pt: 18, weight: "regular", color: "text_soft", align: "center"}
+
+  - page: 5
+    role: "daily_instructions"
+    core_point: "服藥期間三個時間點該做的事"
+    semantic_structure: "sequence"
+    layout: {id: "process_timeline", variant: "three_step"}
+    visible_text:
+      title: "服藥期間這樣做"
+      steps:
+        - {label: "開始服藥", detail: "胃藥建議餐前30–60分鐘服用"}
+        - {label: "服藥期間", detail: "嚴格禁酒；大便舌頭變黑是正常現象"}
+        - {label: "吃完藥後", detail: "四環黴素類與牛奶、鈣片、鐵劑隔開2小時以上"}
+    visual: "水平時間軸插畫，三個圓形站點由左至右排列並以柔和線條串連：第一站畫一顆藥丸配著時鐘與餐盤；第二站畫一個打叉的酒瓶圖案；第三站畫藥丸與牛奶杯中間夾著一段安全間隔的圖示，整體圓潤卡通、色調溫暖一致"
+    output: "slides/images/page_05.png"
+    overlay_blocks:
+      - {text: "服藥期間這樣做", x: 0.9, y: 0.6, w: 11.5, h: 0.9, font_pt: 34, weight: "bold", color: "primary", align: "left"}
+      - {text: "開始服藥\n胃藥餐前30–60分鐘服用", x: 0.6, y: 5.5, w: 3.8, h: 1.3, font_pt: 16, weight: "regular", color: "text", align: "center"}
+      - {text: "服藥期間\n嚴格禁酒；黑便黑舌屬正常", x: 4.8, y: 5.5, w: 3.8, h: 1.3, font_pt: 16, weight: "regular", color: "text", align: "center"}
+      - {text: "吃完藥後\n四環黴素與牛奶鈣鐵隔開2小時以上", x: 9.0, y: 5.5, w: 3.8, h: 1.3, font_pt: 16, weight: "regular", color: "text", align: "center"}
+
+  - page: 6
+    role: "critical_warnings"
+    core_point: "最重要的兩件事：禁酒與黑便正常"
+    semantic_structure: "contrast"
+    layout: {id: "comparison_split", variant: "two_balanced_cards"}
+    visible_text:
+      title: "最重要的兩件事"
+      left_label: "①"
+      left_text: "服藥期間到停藥後48小時內不能喝酒"
+      right_label: "②"
+      right_text: "大便、舌頭變黑是鉍劑的正常現象，不是出血"
+    visual: "左右兩張等重的圓角卡片插畫：左卡以警示橘色調畫一個打叉的酒杯與倒數 48 小時的時鐘圖示；右卡以安心的教學插畫畫出一顆深色鉍劑藥丸旁邊配一個打勾的安心表情符號，兩卡風格一致、圓潤溫暖"
+    output: "slides/images/page_06.png"
+    overlay_blocks:
+      - {text: "最重要的兩件事", x: 0.9, y: 0.5, w: 11.5, h: 0.9, font_pt: 34, weight: "bold", color: "primary", align: "left"}
+      - {text: "① 服藥期間到停藥後\n48小時內不能喝酒", x: 2.0, y: 4.7, w: 4.3, h: 1.8, font_pt: 20, weight: "bold", color: "text", align: "center"}
+      - {text: "② 大便、舌頭變黑是鉍劑的\n正常現象，不是出血", x: 7.1, y: 4.7, w: 4.3, h: 1.8, font_pt: 20, weight: "bold", color: "text", align: "center"}
+
+  - page: 7
+    role: "followup_action"
+    core_point: "吃完藥之後的三個行動：滿月回診、正確複檢方式、不要抽血"
+    semantic_structure: "action"
+    layout: {id: "action_next_step", variant: "checklist"}
+    visible_text:
+      title: "吃完藥之後"
+      items:
+        - "滿一個月回診複檢"
+        - "做吹氣（碳13呼氣）或糞便檢查"
+        - "不要用抽血驗抗體"
+    visual: "直向清單式插畫，三個圓形勾選圖示由上而下排列：第一項畫一本翻到某一頁的日曆搭配回診包；第二項畫吹氣試管與糞便檢查小盒的可愛圖示；第三項畫一支採血針上打了一個溫和的叉號，整體維持圓潤友善插畫風格"
+    output: "slides/images/page_07.png"
+    overlay_blocks:
+      - {text: "吃完藥之後", x: 0.921, y: 0.372, w: 11.5, h: 0.9, font_pt: 34, weight: "bold", color: "primary", align: "left"}
+      - {text: "滿一個月回診複檢", x: 3.5, y: 1.5, w: 8.5, h: 0.8, font_pt: 24, weight: "bold", color: "text", align: "left"}
+      - {text: "做吹氣（碳13呼氣）或糞便檢查", x: 3.5, y: 3.5, w: 8.5, h: 0.8, font_pt: 24, weight: "bold", color: "text", align: "left"}
+      - {text: "不要用抽血驗抗體", x: 3.5, y: 5.5, w: 8.5, h: 0.8, font_pt: 24, weight: "bold", color: "accent_bad", align: "left"}
+
+  - page: 8
+    role: "pretest_prep"
+    core_point: "複檢前的停藥提醒：PPI停2週、抗生素鉍劑停4週"
+    semantic_structure: "metric"
+    layout: {id: "data_focus", variant: "dual_number"}
+    visible_text:
+      title: "複檢前要注意"
+      number_left: "2週"
+      label_left: "PPI胃藥要停"
+      number_right: "4週"
+      label_right: "抗生素與鉍劑要停"
+      subtext: "太早複檢會驗出「假陰性」，等於白吃一輪藥"
+    visual: "左右並列兩個圓潤的倒數計時插畫：左邊一顆藥丸圖示配 2 週倒數沙漏，右邊兩顆藥丸圖示配 4 週倒數沙漏，中間用一個溫和的警示緞帶連結，底部留白給提醒文字，整體溫暖不驚悚"
+    output: "slides/images/page_08.png"
+    overlay_blocks:
+      - {text: "複檢前要注意", x: 1.228, y: 0.681, w: 11.5, h: 0.9, font_pt: 34, weight: "bold", color: "primary", align: "left"}
+      - {text: "PPI胃藥要停2週", x: 1.5, y: 5.85, w: 4.5, h: 0.7, font_pt: 22, weight: "bold", color: "primary", align: "center"}
+      - {text: "抗生素與鉍劑要停4週", x: 7.3, y: 5.85, w: 4.5, h: 0.7, font_pt: 20, weight: "bold", color: "primary", align: "center"}
+      - {text: "太早複檢會驗出「假陰性」，等於白吃一輪藥", x: 1.2, y: 6.914, w: 10.9, h: 0.471, font_pt: 28, weight: "regular", color: "text_soft", align: "center"}
+
+  - page: 9
+    role: "family_screening"
+    core_point: "家人要不要一起檢查：會傳染、篩檢資源、生活提醒"
+    semantic_structure: "classification"
+    layout: {id: "classification_grid", variant: "two_by_two"}
+    visible_text:
+      title: "家人要一起檢查嗎？"
+      groups:
+        - "會傳染，尤其是小孩"
+        - "45–74歲家人可終身一次免費糞便篩檢"
+        - "使用公筷母匙，不共用餐具牙刷"
+        - "不要嚼食物餵小孩"
+    visual: "2x2 四宮格插畫：第一格畫兩個手拉手的家人小圖示與傳染路徑箭頭；第二格畫一張溫馨的免費篩檢券插畫；第三格畫公筷母匙擺在餐桌上的圖示；第四格畫一個溫柔打叉的嚼食餵食動作圖示，四格風格與配色一致、圓潤卡通"
+    output: "slides/images/page_09.png"
+    overlay_blocks:
+      - {text: "家人要一起檢查嗎？", x: 1.497, y: 0.25, w: 11.5, h: 0.9, font_pt: 32, weight: "bold", color: "primary", align: "left"}
+      - {text: "會傳染，尤其是小孩", x: 1.8, y: 3.3, w: 4.5, h: 0.8, font_pt: 18, weight: "bold", color: "text", align: "center"}
+      - {text: "45–74歲家人可終身一次\n免費糞便篩檢", x: 7.2, y: 3.2, w: 4.5, h: 0.9, font_pt: 15, weight: "bold", color: "accent_ok", align: "center"}
+      - {text: "使用公筷母匙\n不共用餐具牙刷", x: 1.8, y: 6.7, w: 4.5, h: 0.8, font_pt: 15, weight: "regular", color: "text", align: "center"}
+      - {text: "不要嚼食物餵小孩", x: 7.2, y: 6.8, w: 4.5, h: 0.7, font_pt: 18, weight: "regular", color: "text", align: "center"}
+
+  - page: 10
+    role: "faq"
+    core_point: "三個常見疑問與簡短回答"
+    semantic_structure: "scenario"
+    layout: {id: "case_scene_analysis", variant: "three_qa"}
+    visible_text:
+      title: "常見疑問"
+      qa:
+        - {q: "沒有不舒服也要治療嗎？", a: "建議治療，除菌可降低胃癌風險"}
+        - {q: "治療會很痛苦嗎？", a: "多數人可忍受；嚴重紅疹或呼吸困難請立即就醫"}
+        - {q: "殺乾淨了還會再感染嗎？", a: "再感染機率約1%"}
+    visual: "三個並排的對話框插畫情境，每個對話框上方畫一個提問的人物剪影小圖示、下方畫一個回答的醫師人物剪影小圖示，中間以柔和箭頭連接問與答，整體人物造型簡化圓潤不具體五官，色調與其他頁一致"
+    output: "slides/images/page_10.png"
+    overlay_blocks:
+      - {text: "常見疑問", x: 1.142, y: 0.339, w: 11.5, h: 0.9, font_pt: 32, weight: "bold", color: "primary", align: "left"}
+      - {text: "沒有不舒服\n也要治療嗎？", x: 0.95, y: 1.413, w: 3.1, h: 0.673, font_pt: 20, weight: "bold", color: "primary", align: "center"}
+      - {text: "建議治療，除菌可\n降低胃癌風險", x: 0.95, y: 5.113, w: 3.1, h: 0.673, font_pt: 20, weight: "bold", color: "primary", align: "center"}
+      - {text: "治療會很\n痛苦嗎？", x: 5.0, y: 1.413, w: 3.0, h: 0.673, font_pt: 20, weight: "bold", color: "primary", align: "center"}
+      - {text: "多數人可忍受；嚴重\n紅疹或呼吸困難\n請立即就醫", x: 5.0, y: 4.895, w: 3.0, h: 1.01, font_pt: 20, weight: "bold", color: "primary", align: "center"}
+      - {text: "殺乾淨了還會\n再感染嗎？", x: 9.0, y: 1.413, w: 3.1, h: 0.673, font_pt: 20, weight: "bold", color: "primary", align: "center"}
+      - {text: "再感染機率\n約1%", x: 9.0, y: 5.113, w: 3.1, h: 0.673, font_pt: 20, weight: "bold", color: "primary", align: "center"}
+
+  - page: 11
+    role: "summary"
+    core_point: "帶走三句話收尾"
+    semantic_structure: "synthesis"
+    layout: {id: "summary_three", variant: "center_statement"}
+    visible_text:
+      title: "帶走這三句話"
+      points:
+        - "按時吃完藥，服藥期間及停藥後48小時不喝酒"
+        - "吃完藥滿一個月回來複檢；複檢前胃藥停2週"
+        - "家人先篩檢、陽性再治療，用公筷母匙"
+      footer: "資料來源：健保署、國健署公告｜查證日 2026-08-09｜僅供衛教參考，不能取代醫師診斷｜資料整理：高雄榮總家庭醫學部　潘醫師"
+    visual: "中央一個溫暖的守護光環插畫，胃部造型被三道柔和的圓弧環繞，象徵三個要點層層守護；背景留白乾淨，底部保留一條安靜的頁尾留白區，整體收斂、安心、圓潤"
+    output: "slides/images/page_11.png"
+    overlay_blocks:
+      - {text: "帶走這三句話", x: 1.0, y: 0.5, w: 11.3, h: 0.9, font_pt: 34, weight: "bold", color: "accent_ok", align: "center"}
+      - {text: "① 按時吃完藥，服藥期間及停藥後48小時不喝酒", x: 1.3, y: 5.0, w: 10.7, h: 0.55, font_pt: 18, weight: "bold", color: "text", align: "center"}
+      - {text: "② 吃完藥滿一個月回來複檢；複檢前胃藥停2週", x: 1.3, y: 5.6, w: 10.7, h: 0.55, font_pt: 18, weight: "bold", color: "text", align: "center"}
+      - {text: "③ 家人先篩檢、陽性再治療，用公筷母匙", x: 1.3, y: 6.2, w: 10.7, h: 0.55, font_pt: 18, weight: "bold", color: "text", align: "center"}
+      - {text: "資料來源：健保署、國健署公告｜查證日 2026-08-09｜僅供衛教參考，不能取代醫師診斷｜資料整理：高雄榮總家庭醫學部　潘醫師", x: 0.9, y: 6.95, w: 11.5, h: 0.4, font_pt: 10, weight: "regular", color: "text_soft", align: "center"}
+
+validation:
+  regenerate_on:
+    - "文字錯誤"
+    - "字體不夠粗圓"
+    - "版型或風格漂移"
+    - "圖片中出現任何文字或數字（plate 模式須為淨背景）"

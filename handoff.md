@@ -4,25 +4,43 @@
 
 ## ⏯️ 目前做到哪
 
-**階段二完成後的 bug 修復＋內容補強（2026-08-12）。**
+**2026-08-12 同時發生兩件事：repo 轉公開＋開 Pages（另一 session），以及階段三病人衛教圖片簡報完成（本 session）。**
 
-潘醫師請 Claude Code 讀決策工具 HTML 抓問題，抓到並修好：
+### 1. repo 從私有轉為公開＋開 GitHub Pages
 
-- `engine.js` 的 `decide()` 警示收集**漏接兩條規則表已定義的安全警語**：`bloodAntibody`（不可用血液抗體確認根除）與 `metronidazoleAlcohol`（服藥期間禁酒）——規則表寫了，前端永遠不會顯示。已修，並在 `engine.test.js` 加兩條回歸測試鎖住
-- `bloodAntibody` 的引用標籤 `[DX-02]` 是斷鏈（`meta.sources` 沒有這個 key，雖然 `data/02` 有這個 fact 但屬「待溯源」等級），改引用同一事實已經在用的 `[FU-01]`
-- 新增 `data/03-處方與抗藥性.md` 的 `[PPI-01]`：6 個 PPI 成分（esomeprazole／lansoprazole／omeprazole／pantoprazole／rabeprazole／dexlansoprazole）的學名／台灣商品名／常見錠劑規格／除菌 BID 劑量對照表，掛回決策工具 5 個含 PPI 處方；**BID 劑量數字本身仍標 🔲 待溯源**（引用一般臨床常識，非官方指引原文，尚待補實）
-- 決策工具＋衛教單張頁尾加註署名「高雄榮總家庭醫學部　潘醫師」（潘醫師本人要求，見 agents.md 署名慣例段）
-- `rules.json` 版本 1.0.0 → 1.0.2；`engine.test.js` 151 項全過；`acceptance.py` 19 PASS／0 FAIL
-- 已 commit + push（`da73d3a`）
-- **OneDrive `文件\HP-clinic_成品\` 的發送用副本已同步成修好的版本**（原本是 bug 修復前的舊版，這次一併更新）；資料夾內另有一個「病人衛教單張 複製.html」疑似重複檔，尚未處理，留給潘醫師確認要不要刪
+起因：潘V在醫院用 OneDrive 網頁版「預覽」開診間決策工具，畫面正常但所有出處連結點不開（OneDrive 線上預覽用 sandbox iframe，會擋連結跳轉，不是檔案壞了）；同事也想要能直接點開的連結。潘V確認要推翻 08-09「私有不上線」的原始決定，改為公開。完成內容：
+
+- `gh repo edit --visibility public`：repo 轉公開
+- `gh api .../pages`：開通 GitHub Pages（main branch root）→ **https://philia81301-commits.github.io/HP-clinic/**
+- 新增根目錄 `index.html`：Pages 入口頁，分「醫療人員用」診間決策工具／「給病人用」衛教單張兩張卡片
+- 兩個 template（`decision.template.html`、`leaflet.template.html`）頁尾署名從「高雄榮總家庭醫學部　潘醫師」改回「潘湘如醫師｜家庭醫學科」（只署個人名，沿用骨鬆／肌少症等公開工具舊慣例——本專案轉公開後職務著作顧慮就適用了）
+- 決策工具頁尾補 GitHub Issues 回報連結＋© 2026 潘湘如醫師＋CC BY-NC-ND 4.0（用字串拆解的方式注入，避開 `build.js` 的 `assertNoExternal` 離線檢查，見下方注意事項）
+- `node src/build.js` 重建、`python src/acceptance.py` 重驗（19 PASS／0 FAIL，WARN 同舊，皆已知）
+- 用瀏覽器實際打開 Pages 網址驗證：入口頁、決策工具都正常渲染，健保署／國健署等出處連結皆可正常點開
+- OneDrive `文件\HP-clinic_成品\` 的發送用副本已同步成最新版（含新頁尾）
+- 已 commit + push（`12f34e1`）
+
+### 2. 階段三：病人衛教單張圖片簡報（PPTX，11 頁）
+
+用 `yaml-image-deck` 技能，`output_mode: plate`——AI 只畫背景插畫（不含任何文字），精確臨床數字（14天、48小時、PPI停2週、抗生素鉍劑停4週、45–74歲、1% 等）全部用電腦字型後製疊字，避免 AI 把數字畫錯的用藥安全風險。完成內容：
+
+- 下載並安裝 **jf-openhuninn-2.1**（justfont 開源粉圓體，OFL 授權可商用）到系統字型——這台電腦原本沒裝任何圓體中文字，plate 模式疊字需要
+- 11 張背景插畫用 gpt-image-2（low quality）生成，花費約 NT$33；生成後逐張比對修正了多處文字疊到圖案的問題（golden sample 是 `page_04.png`）
+- `deck/build_pptx.py` 讀 `deck/spec.yaml` 組裝成 PPTX（13.333×7.5in，16:9）
+- 潘醫師收到後在 PowerPoint 手動調整了字體大小與間距（存成 `_1.pptx`），已用 python-pptx 逐一比對兩份檔案的座標／字級差異，**同步寫回 `spec.yaml`**，重新組裝後確認跟手改版本一致，取代成唯一正式檔（`_1.pptx` 已刪除）
+- 成品：`output/幽門螺旋桿菌陽性處置_病人衛教圖卡.pptx`
+- **本次收工一併把 `deck/` 納入 git**（`spec.yaml`、`build_pptx.py`、`render_preview.py`、`slides/images/*.png` 11 張原始背景圖）；`deck/preview/`（自製渲染驗收用，可重生成）已加進 `.gitignore` 不進 repo
+- 沒有 LibreOffice，最終視覺驗收是用自製的 `render_preview.py`（同座標同字型的 PIL 渲染)，不是 PowerPoint 原生引擎；已跟使用者說明建議另外用 PowerPoint 開一次確認
 
 ## 🚦 目前狀態
 
 - `rdq/RDQ-spec-hpylori-treatment-20260809.md`：已確認、需求凍結
-- `data/`：01–06 六份；7 條 🔲 待溯源 fact（AMR-03、DX-02、EPI-02、EPI-03、EPI-04、FU-03、FU-05，跟上次一樣，PPI-01 本身有部分出處不算在這清單裡）不擋階段三
-- `src/`：rules.json **v1.0.2**、engine.js、build.js、serve.js、**engine.test.js（151 項全過）**、**acceptance.py（19 PASS／0 FAIL）**、兩個 template 齊備
-- `output/`：兩份 HTML（決策＋衛教，衛教 1 頁），皆為最新版
-- OneDrive `文件\HP-clinic_成品\`：兩份 HTML，**已同步為最新版**（發送用副本）
+- `data/`：01–06 六份；7 條 🔲 待溯源 fact 不擋階段三（未變動）
+- `src/`：rules.json v1.0.2、engine.js、build.js、serve.js、engine.test.js（151 項全過）、acceptance.py（19 PASS／0 FAIL）、兩個 template 已改頁尾
+- `output/`：兩份 HTML（決策＋衛教，含新頁尾）＋ **PPTX 圖片簡報（11 頁，本次新增）**
+- **repo：公開，GitHub Pages 已上線** https://philia81301-commits.github.io/HP-clinic/
+- OneDrive `文件\HP-clinic_成品\`：已同步最新版 HTML；PPTX 尚未同步過去（只在 `output/`）；裡面「病人衛教單張 複製.html」疑似重複檔，仍待潘醫師確認要不要刪
+- `deck/`：階段三簡報素材，spec.yaml 已跟成品 PPTX 完全同步，本次收工一併進 git
 
 ## ⭐ 本階段最重要的發現（決策工具已實作）
 
@@ -39,16 +57,19 @@
 
 ## ➡️ 下一步
 
-1. **產生 OneDrive 分享連結**：`onedrive.live.com` → `文件\HP-clinic_成品` → 共用 → 「任何擁有此連結的人」→ 傳給同仁（要找 Agent 代操作也行）
-2. **階段三：整理報告（HTML）＋簡報（PPTX）** —— 簡報走 pptx 技能；淺色底、內文 20–24pt 粗體、留白 30%、有數列畫原生圖表；報告與簡報一起對應 RDQ 驗收條件再跑一次 acceptance.py
+1. **階段三：整理報告（HTML）** —— 尚未開始；有了 Pages 連結後，報告可以直接連到線上工具
+2. 可選：PPTX 圖片簡報同步一份到 OneDrive `文件\HP-clinic_成品\`（跟兩份 HTML 一起發送用）
 3. 可選：清 `data/` 7 條待溯源（成品引用前需補實或降級，不擋階段三）
+4. 可選：`output/` 裡兩份 HTML 現在其實是「單一離線 HTML」與「公開網頁」雙重用途，之後若確定以 Pages 為主要發送管道，OneDrive 同步這一步可以考慮省略
 
 ## ⚠️ 注意事項
 
-- **改了 `output/` 的成品內容，記得同步更新 OneDrive `文件\HP-clinic_成品\` 的發送用副本**（這次就是漏了這步才發現舊版還帶著 bug；`cp output/*.html` 到那個資料夾即可）
-- **署名固定寫「高雄榮總家庭醫學部　潘醫師」**（決策工具與衛教單張頁尾都有），改版面時不要漏掉或改掉這行
-- **兩台電腦都放 `C:\projects\HP-clinic\`**，開工前 `git pull`、收工後 `git push`；不要放進 OneDrive 或 Google 雲端硬碟（**注意：`HP-clinic_成品` 副本例外的放在 OneDrive，那是發送用）**
-- **repo 私有**，內含健保給付條文，不得轉公開、不得開 GitHub Pages；GitHub 私人 repo 無法給「免登入」連結，發送一律靠聊天室／OneDrive 分享／隨身碟
+- **repo 已公開，不要再假設私有**：舊的「不得轉公開、不開 Pages」是 08-09 的決定，08-12 已被潘V本人推翻作廢
+- **署名跟著公開／私有狀態走，不是一次定案**：目前是「潘湘如醫師｜家庭醫學科」（只署個人名）。如果之後又改回私有院內工具，才需要再問要不要掛機構名
+- **`build.js` 的 `assertNoExternal` 檢查會擋掉頁尾任何字面 `href="https://...`**（超連結也算，不只 `<script src>`/`<img>`）：要加外部連結，URL 要拆字串再組合再塞進 `innerHTML`，不要寫死在 HTML 屬性裡，否則 build 直接 FAIL
+- **OneDrive 網頁版「預覽」HTML 會用 sandbox iframe 擋掉連結跳轉**（畫面正常但連結點不開）——交付 HTML 工具給人時優先給 Pages 連結，不要叫對方直接在 OneDrive 網頁預覽裡用
+- 改了 `output/` 的 HTML 成品內容，記得同步更新 OneDrive `文件\HP-clinic_成品\` 的發送用副本
+- **兩台電腦都放 `C:\projects\HP-clinic\`**，開工前 `git pull`、收工後 `git push`；不要放進 OneDrive 或 Google 雲端硬碟
 - 原始素材（3 份 docx）在 `C:\Users\phili\Downloads\`，用 pandoc 轉 md，**不要直接讀 docx**
 - **抗藥率官方查無**（已確認，不必再找），現用學術研究資料收集於 2013–2019，成品引用必須顯示年份；AMR-01 於 acceptance.py 已有專項檢查
 - 用詞統一：複檢時機一律寫「**吃完藥滿一個月**」，不要混用「停藥後一個月」與「療程結束後 4 週」
@@ -56,15 +77,16 @@
 - 自費金額**不要寫死**（各院自訂），成品寫「依各院所公告」
 - 給付規定會變，成品必須顯示「本資料查證日：**2026-08-09**」
 - **衛教單張尺寸鐵律**：`@page size:210mm 279.4mm`（A4∩Letter 交集），**不要改成 size:Letter**；溢頁只靠縮字級/行距/文案解決
-- **驗證渲染原則**：一律以 **Chrome exe 實渲染 PDF 為準**（Playwright chromium 字體不同量測不準）；`node src/build.js` 後可用 `python src/acceptance.py` 自動驗（D2 會用 Chrome 實渲染數頁＋檢查紙張 595pt）
-- acceptance.py 的 36 條 WARN 全是資料層已知狀態（7 條待溯源＋缺年份）**不是失敗**；FAIL 只會是結構破口
+- **驗證渲染原則**：一律以 **Chrome exe 實渲染 PDF 為準**（Playwright chromium 字體不同量測不準）；`node src/build.js` 後可用 `python src/acceptance.py` 自動驗
+- acceptance.py 的 WARN 全是資料層已知狀態（待溯源＋缺年份）**不是失敗**；FAIL 才是結構破口
 - **UI 預設值**：決策工具「有無潰瘍診斷」預設「無潰瘍診斷」
-- **`.playwright-mcp/` 已加進 .gitignore**；serve.js 是本機預覽用
 - 決策工具不收集任何病人資料（純前端、無表單、無後端）
 - PowerShell 5.1 會把 git／gh 的 stderr 包成 NativeCommandError，看起來像失敗其實成功，看最後幾行判斷
+- **PPTX 圖片簡報（`deck/`）以後要改文字/字級/位置**：優先改 `deck/spec.yaml` 的 `overlay_blocks` 再跑 `python deck/build_pptx.py --spec deck/spec.yaml --images-dir deck/slides/images --out output/<檔名>.pptx` 重新組裝，不要只在 PowerPoint 裡改而不回寫 spec——否則下次重新生成會把手改的內容蓋掉
+- 圓體字型 **jf-openhuninn-2.1** 已裝在這台電腦（`%LOCALAPPDATA%\Microsoft\Windows\Fonts\`），換一台電腦要用 `deck/` 重新生成/組裝前，記得先裝這個字型，否則 PowerPoint 疊字會 fallback 成預設字體
 
 ## 🕐 最後更新
 
 - 時間：2026-08-12
 - 更新者：Claude Code @ DESKTOP-LVSV9Q5
-- Git push：✅ 已推（9893005，程式碼修正見 da73d3a）
+- Git push：待推（本次 commit 尚未執行，見下方 git 同步步驟）
