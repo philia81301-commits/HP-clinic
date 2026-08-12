@@ -89,4 +89,4 @@
 
 - 時間：2026-08-12
 - 更新者：Claude Code @ DESKTOP-LVSV9Q5
-- Git push：待推（本次 commit 尚未執行，見下方 git 同步步驟）
+- Git push：✅ 已推（`761b590`）
