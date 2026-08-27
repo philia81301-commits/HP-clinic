@@ -10,7 +10,7 @@
 黑便黑舌是鉍劑正常現象、複檢用吹氣／糞便（滿一個月）、家人先篩檢。出題守則：選項同構、
 干擾項必須真錯、考安全重點不考背誦。**遊戲只在螢幕顯示，`@media print` 整段隱藏**，單頁列印完全不受影響。
 改的是 `src/leaflet.template.html`（遊戲直接寫在 template，不經 rules.json），`node src/build.js` 重建，
-engine 測試 151 項全過。localStorage key：`hp-quiz-leaflet`。題目已對照單張內容出題，交醫師審定。
+engine 測試 151 項全過。localStorage key：`hp-quiz-leaflet`。五題已於 2026-08-27 經潘醫師審定通過。
 
 **2026-08-12 同時發生兩件事：repo 轉公開＋開 Pages（另一 session），以及階段三病人衛教圖片簡報完成（本 session）。**
 
