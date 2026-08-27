@@ -5,86 +5,119 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>幽門螺旋桿菌　病人衛教單張</title>
 <style>
-  /* 單面列印。紙張設為 A4 與 Letter 的「交集」210 × 279.4mm。
-     寬度取 A4（210 < Letter 的 215.9）、高度取 Letter（279.4 < A4 的 297）。
-     這個尺寸同時放得進兩種紙，兩邊都不會被裁、不需縮放，
-     因此影印機紙匣不論放 A4 或 Letter 都能直接印。
-     （不要寫成 size:Letter —— 那比 A4 寬 5.9mm，印在 A4 上會裁掉左右。）
-     目標 1 頁；若內容溢頁，先縮字級或行距，不要改成 size:Letter。 */
+  /* ── 螢幕：網頁式衛教版面（版型比照 osteoporosis-clinic patient-education.html：
+        大標頭卡片＋分頁膠囊，預設停在「先來闖關」，點分頁才出現文字內容）。
+     ── 列印：維持原本 A4∩Letter（210 × 279.4mm）單張。
+        寬度取 A4（210 < Letter 的 215.9）、高度取 Letter（279.4 < A4 的 297），
+        紙匣放 A4 或 Letter 都不會被裁、不需縮放。不要改成 size:Letter。 */
   @page{ size:210mm 279.4mm; margin:10mm 15mm 12mm; }
   :root{
-    --ink:#1a2430; --ink2:#4c5c68; --line:#cfdbe2;
+    --ink:#1a2430; --ink2:#4c5c68; --muted:#64748B; --line:#cfdbe2;
     --main:#0f4c5c; --soft:#e6f0f4; --ok:#1c6b48; --okbg:#e6f4ec;
     --warn:#a45208; --warnbg:#fdf2e3; --bad:#8f2626; --badbg:#fbeced;
+    --pline:rgba(15,76,92,.16); --shadow:0 10px 30px rgba(15,23,42,.08);
   }
-  *{box-sizing:border-box}
-  body{margin:0;background:#eef2f5;color:var(--ink);
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{color:var(--ink);
     font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
-    font-size:13px;line-height:1.35}
-  .page{width:210mm;margin:14px auto;padding:8mm 15mm 9mm;background:#fff;
-    box-shadow:0 2px 14px rgba(0,0,0,.12)}
+    font-size:19px;line-height:1.75;-webkit-text-size-adjust:100%;
+    background:linear-gradient(180deg,#F7FBFC 0%,#E9F3F6 100%);background-attachment:fixed}
+  .wrap{max-width:1080px;margin:0 auto;padding:24px 20px 80px}
+
+  /* ── 標題卡片（僅螢幕）── */
+  header.hero{background:#fff;border:1px solid var(--pline);border-radius:24px;
+    box-shadow:var(--shadow);padding:28px 30px;margin-bottom:20px;position:relative;overflow:hidden}
+  header.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;
+    border-radius:50%;background:var(--soft);opacity:.7;z-index:0}
+  header.hero > *{position:relative;z-index:1}
+  .hero .icon{font-size:52px;line-height:1}
+  .hero .kicker{font-size:15px;letter-spacing:3px;color:var(--main);font-weight:800}
+  .hero h1{font-size:40px;line-height:1.25;margin:8px 0 10px;color:var(--main);font-weight:900;letter-spacing:-.5px}
+  .hero p{font-size:20px;color:var(--ink2);margin:0}
+
+  /* ── 分頁膠囊 ── */
+  nav.tabs{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+  .tab{font-family:inherit;font-size:18px;font-weight:800;cursor:pointer;
+    border:1px solid var(--pline);background:#fff;color:var(--main);
+    padding:12px 18px;border-radius:999px;box-shadow:var(--shadow);
+    transition:background .2s,color .2s,transform .2s}
+  .tab:hover{background:var(--soft)}
+  .tab.active{background:var(--main);color:#fff;border-color:var(--main);transform:translateY(-1px)}
+  .panel{display:none;animation:fade .35s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ── 內容區：螢幕顯示成白色卡片，列印還原成緊湊單張 ── */
+  .page{background:none}
+  .page .panel{background:#fff;border:1px solid var(--pline);border-radius:20px;
+    box-shadow:var(--shadow);padding:26px 30px;margin-bottom:18px}
+  .hd{display:none}
   h1{margin:0 0 2px;font-size:20px;color:var(--main);line-height:1.3}
   .sub{margin:0;font-size:12.5px;color:var(--ink2)}
-  .hd{border-bottom:3px solid var(--main);padding-bottom:4px;margin-bottom:6px}
-  h2{font-size:15px;margin:4px 0 2px;color:var(--main);display:flex;align-items:center;gap:7px}
+  h2{font-size:28px;margin:0 0 14px;color:var(--main);font-weight:900;display:flex;align-items:center;gap:10px;line-height:1.35}
   h2 .n{display:inline-flex;align-items:center;justify-content:center;
-    width:20px;height:20px;border-radius:50%;background:var(--main);color:#fff;font-size:12.5px;flex:none}
-  p{margin:2px 0}
-.box{border-radius:8px;padding:3px 9px;margin:3px 0}
+    width:36px;height:36px;border-radius:50%;background:var(--main);color:#fff;font-size:18px;flex:none}
+  p{margin:0 0 12px;color:var(--ink2)}
+.box{border-radius:16px;padding:14px 20px;margin:14px 0}
 .box.main{background:var(--soft)}
 .box.ok{background:var(--okbg)}
-.box.ok p{margin:1px 0}
+.box.ok p{margin:6px 0}
 .box.warn{background:var(--warnbg)}
 .box.bad{background:var(--badbg)}
-.big{font-size:15px;font-weight:800;color:var(--main)}
-table{border-collapse:collapse;width:100%;font-size:12.5px;margin:2px 0}
-  th,td{border:1px solid var(--line);padding:2px 7px;text-align:left;vertical-align:middle}
+.big{font-size:22px;font-weight:800;color:var(--main)}
+table{border-collapse:collapse;width:100%;font-size:18px;margin:12px 0}
+  th,td{border:1px solid var(--line);padding:10px 14px;text-align:left;vertical-align:middle}
   th{background:var(--soft);color:var(--main);font-weight:700;white-space:nowrap}
   .yes{color:var(--ok);font-weight:800}
   .no{color:var(--bad);font-weight:800}
-.fine{font-size:11.8px;color:var(--ink2);line-height:1.34}
-ul{margin:2px 0;padding-left:15px}
-li{margin:0.5px 0}
-.qa{margin:3px 0}
-.qa dt{font-weight:800;color:var(--main);margin-top:1px;font-size:13px}
-.qa dd{margin:0;color:var(--ink)}
-.foot{margin-top:3px;padding-top:2px;border-top:1px solid var(--line);
-  font-size:9.8px;color:var(--ink2);line-height:1.32;
+.fine{font-size:16px;color:var(--muted);line-height:1.7}
+ul{margin:0 0 12px;padding-left:26px;color:var(--ink2)}
+li{margin-bottom:8px}
+.qa{margin:6px 0}
+.qa dt{font-weight:800;color:var(--main);margin-top:14px;font-size:20px}
+.qa dd{margin:4px 0 0;color:var(--ink2)}
+.foot{margin-top:6px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:14.5px;color:var(--muted);line-height:1.85;
   break-inside:avoid;page-break-inside:avoid}
   .foot p{margin:0}
-  /* ── 闖關小遊戲（僅螢幕；機制同 healthy-weight-public 章首小遊戲，列印不出現）── */
-  .quiz{max-width:210mm;margin:14px auto 0;padding:0}
+
+  /* ── 闖關小遊戲（僅螢幕，列印不出現）──
+     尺寸為全站統一規格（standard 出自 osteoporosis-clinic，healthy-weight-public 同步採用）：
+     標題 27、題目 21、選項 18、星星 38。配色維持本站主色，只統一尺寸。 */
   .quiz-box{background:linear-gradient(160deg,#FFFDF4,#FDF1DE);border:2px solid #F0D9A8;
-    border-radius:18px;padding:20px 22px 24px;box-shadow:0 6px 20px rgba(154,107,42,.10);
+    border-radius:24px;padding:24px 26px 28px;box-shadow:0 10px 30px rgba(154,107,42,.08);
     position:relative;overflow:hidden}
-  .quiz-box::before{content:"✦";position:absolute;top:12px;right:18px;font-size:18px;
+  .quiz-box::before{content:"✦";position:absolute;top:14px;right:20px;font-size:20px;
     color:#E8B83C;opacity:.55;animation:qtwinkle 2.2s ease-in-out infinite}
+  .quiz-box::after{content:"✦";position:absolute;bottom:18px;left:16px;font-size:13px;
+    color:#E8B83C;opacity:.4;animation:qtwinkle 2.2s ease-in-out infinite 1.1s}
   @keyframes qtwinkle{0%,100%{opacity:.2;transform:scale(.85)}50%{opacity:.7;transform:scale(1.1)}}
-  .quiz-head{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-  .quiz-mascot{font-size:42px;line-height:1;animation:qbob 2.6s ease-in-out infinite}
+  .quiz-head{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+  .quiz-mascot{font-size:52px;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.12));
+    animation:qbob 2.6s ease-in-out infinite}
   @keyframes qbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-  .quiz-kicker{font-size:12px;font-weight:800;letter-spacing:.12em;color:#a45208}
-  .quiz-title{margin:2px 0 3px;font-size:20px;font-weight:900;color:var(--ink)}
-  .quiz-sub{margin:0;color:var(--ink2);font-size:13.5px}
-  .quiz-stars{display:flex;gap:5px;margin-left:auto}
-  .quiz-stars i{width:30px;height:30px;border-radius:50%;background:#fff;border:2px dashed #E3CFA2;
-    display:flex;align-items:center;justify-content:center;font-style:normal;font-size:14px;
+  .quiz-kicker{font-size:14px;font-weight:800;letter-spacing:.12em;color:var(--warn)}
+  .quiz-title{margin:2px 0 4px;font-size:27px;font-weight:900;color:var(--ink)}
+  .quiz-sub{margin:0;color:var(--muted);font-size:17px}
+  .quiz-stars{display:flex;gap:6px;margin-left:auto}
+  .quiz-stars i{width:38px;height:38px;border-radius:50%;background:#fff;border:2px dashed #E3CFA2;
+    display:flex;align-items:center;justify-content:center;font-style:normal;font-size:18px;
     color:#D8C49B;transition:.2s}
   .quiz-stars i.on{border-style:solid;border-color:#E8B83C;background:#FFF3CE;animation:qpop .45s}
   @keyframes qpop{0%{transform:scale(.4)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
-  .qcard{background:#fff;border:1.5px solid #EFE3C8;border-radius:14px;padding:14px 16px 16px;
-    margin-top:14px;animation:qin .4s}
+  .qcard{background:#fff;border:1.5px solid #EFE3C8;border-radius:18px;padding:18px 20px 20px;
+    margin-top:16px;animation:qin .4s}
   @keyframes qin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .qnum{display:inline-block;background:var(--soft);color:var(--main);font-weight:800;
-    font-size:12.5px;border-radius:99px;padding:2px 11px}
-  .qtext{font-size:16px;font-weight:800;margin:8px 0 10px}
-  .qopts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  @media (max-width:640px){.qopts{grid-template-columns:1fr}}
-  .qopts button{font-family:inherit;font-size:14px;text-align:left;background:#FDFBF3;
-    border:1.5px solid #E7DDC2;border-radius:99px;padding:8px 14px 8px 8px;cursor:pointer;
-    transition:.15s;display:flex;align-items:center;gap:9px;color:var(--ink)}
-  .qopts button i{width:25px;height:25px;border-radius:50%;background:#F4E7C8;color:#8A6215;
-    font-style:normal;font-weight:800;font-size:12.5px;display:flex;align-items:center;
+    font-size:15px;border-radius:99px;padding:3px 13px}
+  .qtext{font-size:21px;font-weight:800;margin:10px 0 14px;color:var(--ink)}
+  .qopts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .qopts button{font-family:inherit;font-size:18px;text-align:left;background:#FDFBF3;
+    border:1.5px solid #E7DDC2;border-radius:99px;padding:10px 18px 10px 10px;cursor:pointer;
+    transition:.15s;display:flex;align-items:center;gap:10px;color:var(--ink)}
+  .qopts button i{width:30px;height:30px;border-radius:50%;background:#F4E7C8;color:#8A6215;
+    font-style:normal;font-weight:800;font-size:15px;display:flex;align-items:center;
     justify-content:center;flex-shrink:0;transition:.15s}
   .qopts button:hover:not(:disabled){transform:translateY(-2px);
     border-color:var(--main);background:#fff;box-shadow:0 4px 12px rgba(15,76,92,.14)}
@@ -97,50 +130,90 @@ li{margin:0.5px 0}
   .qopts button.yes i{background:var(--main);color:#fff}
   .qopts button.yes::after{content:"⭕";margin-left:auto}
   @keyframes qshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-  .qmiss{margin-top:8px;font-size:13px;color:#A8834B}
-  .qwhy{margin-top:9px;background:#FEF3C7;color:#5A4520;border-radius:9px;
-    padding:8px 12px;font-size:13.5px;line-height:1.6}
-  .quiz-done{margin-top:16px;background:linear-gradient(180deg,#FFFDF4,#FFF4D8);
-    border:2px solid #E8B83C;border-radius:14px;padding:20px 16px;text-align:center;animation:qin .5s}
-  .quiz-done .party span{display:inline-block;font-size:26px;margin:0 3px;animation:qbob 1.2s ease-in-out infinite}
+  .qmiss{margin-top:9px;font-size:16px;color:#A8834B}
+  .qwhy{margin-top:12px;background:#FEF3C7;color:#5A4520;border-radius:10px;
+    padding:10px 14px;font-size:17px;line-height:1.7}
+  .quiz-done{margin-top:18px;background:linear-gradient(180deg,#FFFDF4,#FFF4D8);
+    border:2px solid #E8B83C;border-radius:18px;padding:24px 20px;text-align:center;animation:qin .5s}
+  .quiz-done .party span{display:inline-block;font-size:30px;margin:0 3px;animation:qbob 1.2s ease-in-out infinite}
   .quiz-done .party span:nth-child(2){animation-delay:.15s}
   .quiz-done .party span:nth-child(3){animation-delay:.3s}
   .quiz-done .party span:nth-child(4){animation-delay:.45s}
   .quiz-done .party span:nth-child(5){animation-delay:.6s}
-  .quiz-done h3{font-size:19px;font-weight:900;margin:8px 0 4px;color:var(--ink)}
-  .quiz-done p{margin:0 0 12px;color:var(--ink2);font-size:13.5px}
-  .qbtn{display:inline-block;font-family:inherit;font-size:14px;font-weight:800;border-radius:99px;
-    padding:8px 18px;cursor:pointer;text-decoration:none;margin:0 4px 6px;transition:.15s;
+  .quiz-done h3{font-size:24px;font-weight:900;margin:10px 0 6px;color:var(--ink)}
+  .quiz-done p{margin:0 0 16px;color:var(--muted);font-size:17px}
+  .qbtn{display:inline-block;font-family:inherit;font-size:17px;font-weight:800;border-radius:99px;
+    padding:10px 22px;cursor:pointer;text-decoration:none;margin:0 4px 6px;transition:.15s;
     background:var(--main);border:2px solid var(--main);color:#fff}
   .qbtn:hover{transform:translateY(-2px)}
-  .qbtn.again{background:#fff;border-color:#cfdbe2;color:var(--ink2)}
+  .qbtn.again{background:#fff;border-color:var(--line);color:var(--ink2)}
 
+  @media screen and (max-width:640px){
+    .hero h1{font-size:28px}
+    .hero p{font-size:17px}
+    .page .panel{padding:20px 18px}
+    .qopts{grid-template-columns:1fr}
+    .quiz-box{padding:18px 16px 22px;border-radius:18px}
+    .quiz-stars{margin-left:0}
+  }
+
+  /* ── 列印：還原成原本的緊湊 A4 單張（遊戲與網頁介面不進紙本）── */
   @media print{
-    body{background:#fff}
-    .quiz{display:none !important} /* 遊戲純互動，不進紙本 */
-    .page{width:auto;margin:0;padding:0;box-shadow:none}
+    body{background:#fff;font-size:13px;line-height:1.35}
+    .wrap{max-width:none;padding:0}
+    .no-print{display:none !important}
+    .panel{display:block !important}
+    .page .panel{background:none;border:none;box-shadow:none;border-radius:0;padding:0;margin:0}
+    .hd{display:block;border-bottom:3px solid var(--main);padding-bottom:4px;margin-bottom:6px}
+    h2{font-size:15px;margin:4px 0 2px;font-weight:700;gap:7px}
+    h2 .n{width:20px;height:20px;font-size:12.5px}
+    p{margin:2px 0;color:var(--ink)}
+    .box{border-radius:8px;padding:3px 9px;margin:3px 0}
+    .box.ok p{margin:1px 0}
+    .big{font-size:15px}
+    table{font-size:12.5px;margin:2px 0}
+    th,td{padding:2px 7px}
+    .fine{font-size:11.8px;color:var(--ink2);line-height:1.34}
+    ul{margin:2px 0;padding-left:15px;color:var(--ink)}
+    li{margin:0.5px 0}
+    .qa{margin:3px 0}
+    .qa dt{margin-top:1px;font-size:13px}
+    .qa dd{margin:0;color:var(--ink)}
+    .foot{margin-top:3px;padding-top:2px;font-size:9.8px;color:var(--ink2);line-height:1.32}
     h2,table,.box,.qa dt{break-inside:avoid;page-break-inside:avoid}
     h2{break-after:avoid;page-break-after:avoid}
-  }
-  @media screen{
-    .page{min-height:279.4mm}
-  }
-  @media screen and (max-width:680px){
-    .page{width:auto;padding:16px}
   }
 </style>
 </head>
 <body>
+<div class="wrap">
+
+<header class="hero no-print">
+  <div class="icon">🛡️</div>
+  <div class="kicker">病 人 衛 教 單 張</div>
+  <h1>幽門螺旋桿菌，您需要知道的事</h1>
+  <p>給陽性檢查結果的民眾與家屬。這份單張帶你了解為什麼要治療、藥怎麼吃、什麼時候複檢、家人要不要一起查——用藥方案請與您的醫師討論。</p>
+</header>
+
+<nav class="tabs no-print">
+  <button class="tab active" data-p="p0">🎮 先來闖關</button>
+  <button class="tab" data-p="p1">1 為什麼要治療</button>
+  <button class="tab" data-p="p2">2 怎麼治療</button>
+  <button class="tab" data-p="p3">3 吃完藥之後</button>
+  <button class="tab" data-p="p4">4 家人要一起檢查嗎</button>
+  <button class="tab" data-p="p5">5 常見疑問</button>
+  <button class="tab" data-p="p6">帶走三句話</button>
+</nav>
 
 <!-- ── 闖關小遊戲（僅螢幕顯示，列印自動隱藏）── -->
-<section class="quiz" id="quiz">
-  <div class="quiz-box">
+<section class="panel active no-print" id="p0">
+  <div class="quiz-box" id="quiz">
     <div class="quiz-head">
       <div class="quiz-mascot">🛡️</div>
       <div>
         <div class="quiz-kicker">先 來 闖 關</div>
         <h2 class="quiz-title" style="display:block">除菌大作戰五連闖</h2>
-        <p class="quiz-sub">一次一題、四選一，答對才會出現下一題。答錯不扣分——答案都在下面的單張裡！</p>
+        <p class="quiz-sub">一次一題、四選一，答對才會出現下一題。答錯不扣分——答案都在後面的內容裡！</p>
       </div>
       <span class="quiz-stars"><i>☆</i><i>☆</i><i>☆</i><i>☆</i><i>☆</i></span>
     </div>
@@ -150,7 +223,7 @@ li{margin:0.5px 0}
       <h3>五題全通關！獲得稱號「除菌達人」</h3>
       <p>把答案講給家人聽一遍，記得更牢喔。</p>
       <div>
-        <a class="qbtn" href="#leaflet">往下看完整衛教單張 ↓</a>
+        <button class="qbtn" type="button" id="qGo">開始看衛教內容 →</button>
         <button class="qbtn again" type="button" id="qAgain">再玩一次</button>
       </div>
     </div>
@@ -164,6 +237,7 @@ li{margin:0.5px 0}
     <p class="sub">給陽性檢查結果的民眾與家屬　｜　請與醫師討論您的用藥方案</p>
   </div>
 
+  <section class="panel" id="p1">
   <div class="box bad" style="margin-top:0">
     <p class="big" style="color:var(--bad)">您的檢查結果為陽性：胃裡有幽門螺旋桿菌</p>
     <p class="fine">這種細菌會長時間住在胃裡，可能造成胃潰瘍、胃炎，也是<strong>世界衛生組織認定的一級致癌物</strong>，
@@ -173,7 +247,9 @@ li{margin:0.5px 0}
   <h2><span class="n">1</span>為什麼要治療？</h2>
     <p>幽門螺旋桿菌感染後<b>不會自己好</b>，會一直待在胃裡。除菌後可降低胃潰瘍、胃癌的風險。
     檢查陽性<b>不代表現在就會怎樣</b>，把它殺掉是保護自己的最直接方法。</p>
+  </section>
 
+  <section class="panel" id="p2">
   <h2><span class="n">2</span>怎麼治療？</h2>
     <p>醫師會依您的情況開 <b>2～4 種藥</b>（胃藥＋抗生素），<b>連續服用約 14 天</b>。
     請依醫囑、照藥袋標示按時服完，<b>不可自行停藥或減量</b>——沒吃完等於沒治。</p>
@@ -188,7 +264,9 @@ li{margin:0.5px 0}
     <p><b>最重要的兩件事</b>：① 服藥期間及停藥後 <b>48 小時內不能喝酒</b>（會引起嚴重不適）；
     ② 大便變黑、舌頭變黑是<b>鉍劑的正常現象</b>，不是出血，不需要停藥。</p>
   </div>
+  </section>
 
+  <section class="panel" id="p3">
   <h2><span class="n">3</span>吃完藥之後要做什麼？</h2>
     <p><b>吃完最後一顆藥，滿一個月後</b>，回來複檢一次，確認細菌真的殺乾淨了。</p>
     <div class="box main">
@@ -198,7 +276,9 @@ li{margin:0.5px 0}
     </div>
     <p class="fine">複檢方式是<b>吹氣檢查</b>（碳13呼氣試驗）或<b>糞便檢查</b>。<b>抽血驗抗體不能確認有沒有殺乾淨</b>。
     請不要用抽血來驗。複檢若需自費，各院收費不同，請洽院所。</p>
+  </section>
 
+  <section class="panel" id="p4">
   <h2><span class="n">4</span>家裡的家人要一起檢查嗎？</h2>
     <p>幽門螺旋桿菌<b>會傳染</b>，主要經由共用餐具、牙刷或餵食傳染，尤其是<b>小孩</b>。
     只治療一個人，容易被家人再傳回來（像「乒乓球」一樣打來打去）。</p>
@@ -211,7 +291,9 @@ li{margin:0.5px 0}
       <li><b>不要用嘴巴嚼過食物再餵小孩</b></li>
       <li>如廁後<b>確實洗手</b>，注意飲水與食物衛生</li>
     </ul>
+  </section>
 
+  <section class="panel" id="p5">
   <h2><span class="n">5</span>常見疑問</h2>
     <dl class="qa">
       <dt>Q　我沒有不舒服，也要治療嗎？</dt>
@@ -223,7 +305,9 @@ li{margin:0.5px 0}
       <dd>成功殺菌後再感染的機率約 <b>1%</b>。維持良好飲食衛生、家人一起篩檢，
       可把再感染的機會降到最低。</dd>
     </dl>
+  </section>
 
+  <section class="panel" id="p6">
   <div class="box ok">
     <p class="big" style="color:var(--ok)">帶走這三句話</p>
     <p>① <b>按時把藥吃完</b>，服藥期間與停藥後 48 小時<b>不喝酒</b>。</p>
@@ -237,10 +321,24 @@ li{margin:0.5px 0}
     本單張僅供衛教參考，<b>不能取代醫師的診斷與建議</b>。
     　<b>資料整理</b>：潘湘如醫師｜家庭醫學科　｜　內容彙整由 AI 協助</p>
   </div>
+  </section>
+
+</div>
 
 </div>
 
 <script>
+/* ── 分頁切換（機制同 osteoporosis-clinic）── */
+document.querySelectorAll('.tab').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(b){ b.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.p).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
 /* ── 闖關小遊戲（機制移植自 healthy-weight-public）── */
 (function(){
   var Q = [
@@ -306,6 +404,10 @@ li{margin:0.5px 0}
     });
   }
   document.getElementById('qAgain').addEventListener('click', reset);
+  document.getElementById('qGo').addEventListener('click', function(){
+    var tab = document.querySelector('.tab[data-p="p1"]');
+    if(tab) tab.click();
+  });
   show(0);
 })();
 </script>
