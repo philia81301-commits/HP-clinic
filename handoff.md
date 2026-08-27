@@ -95,6 +95,9 @@ engine 測試 151 項全過。localStorage key：`hp-quiz-leaflet`。五題已�
 
 ## 🕐 最後更新
 
-- 時間：2026-08-12
-- 更新者：Claude Code @ DESKTOP-LVSV9Q5
-- Git push：✅ 已推（`761b590`）
+- 時間：2026-08-27（衛教單張闖關小遊戲上線＋審定通過）
+- 更新者：Claude Code（Fable 5）@ X108521（醫院）
+- Git push：✅ 已推（`71dd0f3` 遊戲 → `378f015` 審定），線上版已驗證
+- L3 Obsidian：⚠️ 本次在醫院電腦收工，此電腦的 vault 沒有本專案資料夾，L3 未更新
+- ⚠️ OneDrive `文件\HP-clinic_成品\` 發送用副本在家用電腦——下次在那台開工記得同步最新版衛教單張
+- 前一筆：2026-08-12 @ DESKTOP-LVSV9Q5 · ✅ 已推（`761b590`）

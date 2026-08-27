@@ -30,6 +30,9 @@
   - [x] **衛教單張已壓回 1 頁**（Chrome exe 實渲染驗證，footer 距底線 19pt 餘裕）
   - [x] `src/engine.test.js`（151 項全過：窮舉＋RDQ 情境＋無孤兒建議＋警示不漏接回歸測試）
   - [x] `src/acceptance.py`（對 RDQ 驗收條件：19 項 PASS，驗收全綠；36 條 WARN 為資料層已知待溯源）
+  - [x] 2026-08-27 衛教單張加「除菌大作戰五連闖」闖關小遊戲——機制移植自 healthy-weight-public，
+        遊戲放單張內容前面（遊戲先）、`@media print` 整段隱藏不影響單頁列印；
+        寫在 `src/leaflet.template.html`；五題經潘醫師審定通過
   - [x] 2026-08-12 bug 修復＋內容補強（v1.0.0→1.0.2）：`engine.js` 警示收集漏接 bloodAntibody／metronidazoleAlcohol 兩條規則表已定義的安全警語，已修並補回歸測試；`bloodAntibody` 斷鏈引用 [DX-02]→[FU-01]；新增 `data/03` 的 [PPI-01]（6 個 PPI 成分學名／商品名／劑量對照）並掛回 5 個含 PPI 處方；決策工具＋衛教單張頁尾加註署名
 - [ ] **階段三：整理報告（HTML）＋簡報（PPTX）**
   - [x] 2026-08-12：病人衛教單張圖片簡報（`output/幽門螺旋桿菌陽性處置_病人衛教圖卡.pptx`，11 頁）—— 用 `yaml-image-deck` 技能，plate 模式（AI 只畫背景插畫、文字用 jf-openhuninn-2.1 圓體字型後製疊加，避免精確數字被畫錯），規格與生成腳本留在 `deck/`（未納入 git，屬工作檔）
