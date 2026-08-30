@@ -369,36 +369,34 @@
     c.closePath();
   }
   const DRAWN = {
-    // 自己的牙刷（不共用牙刷）——加牙膏才像牙刷
+    // 自己的牙刷杯（不共用牙刷）——杯子裡插一支牙刷
     toothbrush(c, s){
-      const L = s*1.15;
+      // 牙刷（斜插，先畫，柄尾會被杯子蓋住）
       c.save();
-      c.rotate(-0.5);
-      // 柄（藍綠圓端）
+      c.rotate(0.28);
       c.strokeStyle = '#2e8b9b';
-      c.lineWidth = s*0.14;
+      c.lineWidth = s*0.11;
       c.lineCap = 'round';
-      c.beginPath(); c.moveTo(-L*0.45, 0); c.lineTo(L*0.14, 0); c.stroke();
-      // 頸（稍細）
-      c.lineWidth = s*0.1;
-      c.beginPath(); c.moveTo(L*0.14, 0); c.lineTo(L*0.42, 0); c.stroke();
-      // 刷毛塊（白色，往上）
+      c.beginPath(); c.moveTo(0, s*0.2); c.lineTo(0, -s*0.42); c.stroke();
       c.fillStyle = '#ffffff';
       c.strokeStyle = '#b9c6cb';
       c.lineWidth = 1.5;
-      rr(c, L*0.16, -s*0.24, L*0.27, s*0.2, 3); c.fill(); c.stroke();
-      // 毛線
+      rr(c, -s*0.1, -s*0.6, s*0.2, s*0.19, 3); c.fill(); c.stroke();  // 刷毛塊
       c.strokeStyle = '#dfe8ea';
       c.lineWidth = 1.5;
-      for (const t of [0.22, 0.28, 0.34]){
-        c.beginPath(); c.moveTo(L*t, -s*0.22); c.lineTo(L*t, -s*0.06); c.stroke();
+      for (const dx of [-s*0.04, 0.5, s*0.04]){
+        c.beginPath(); c.moveTo(dx, -s*0.58); c.lineTo(dx, -s*0.43); c.stroke();
       }
-      // 牙膏（薄荷綠圓潤一條）
-      c.strokeStyle = '#3fae8f';
-      c.lineWidth = s*0.1;
-      c.lineCap = 'round';
-      c.beginPath(); c.moveTo(L*0.19, -s*0.3); c.lineTo(L*0.39, -s*0.3); c.stroke();
       c.restore();
+      // 杯子（白底薄荷條紋）
+      c.fillStyle = '#fdfdf8';
+      c.strokeStyle = '#a9b6bf';
+      c.lineWidth = 1.6;
+      rr(c, -s*0.28, -s*0.02, s*0.56, s*0.5, 5); c.fill(); c.stroke();
+      c.fillStyle = '#bfe0d5';
+      c.fillRect(-s*0.28, s*0.18, s*0.56, s*0.13);
+      c.strokeStyle = '#a9b6bf';
+      rr(c, -s*0.28, -s*0.02, s*0.56, s*0.5, 5); c.stroke();
     },
     // 排裝藥（按時吃、不自行停藥）
     blister(c, s){
