@@ -281,7 +281,7 @@
     <p>移動胃寶寶，接住除菌成功的好習慣，集滿進度就過關。服藥期間酒來搗亂——千萬別碰！</p>
     <div class="rules">
       <span>🥢🥄🍽️ 公筷母匙 +10</span>
-      <span>💊🧼 按時吃藥、勤洗手 +10</span>
+      <span>💊🧼👪 吃完療程、家人篩檢 +10</span>
       <span class="bonus">💨 吹氣複檢 +50</span>
       <span class="bad">🍺🍶 扣一命</span>
     </div>
@@ -334,12 +334,14 @@
   const overTitle = document.getElementById('overTitle');
   const finalScore = document.getElementById('finalScore');
 
-  const GOOD = ['🥢','🥄','🍽️','🧼','💊'];
-  const BAD  = ['🍺','🍶'];
+  // 好料 9 種：emoji ＋ 手繪（牙刷、排裝藥、14天日曆沒有可靠的 emoji，畫的）
+  const GOOD = ['🥢','🥄','🍽️','🧼','💊','👪','draw:toothbrush','draw:blister','draw:calendar'];
+  const BAD  = ['🍺','🍶','draw:bloodtube'];
   const POWER = '💨';
   const BAD_LINES = {
     '🍺':'服藥期間嚴格禁酒！',
-    '🍶':'停藥後 48 小時內也不能喝！'
+    '🍶':'停藥後 48 小時內也不能喝！',
+    'draw:bloodtube':'抽血驗抗體不能確認殺乾淨！'
   };
   // 除菌小知識：內容取自本站病人衛教單張（潘醫師審定過的衛教內容）
   const FACTS = [
@@ -355,6 +357,77 @@
     '成功殺菌後再感染的機率約 1%。維持良好飲食衛生、家人一起篩檢，就不容易「乒乓球」傳來傳去。'
   ];
   const LEVEL_NEED = 10;          // 每關要接的好東西數
+
+  // 手繪掉落物（置中於原點，s 為大小）
+  function rr(c, x, y, w, h, r){
+    c.beginPath();
+    c.moveTo(x + r, y);
+    c.arcTo(x + w, y, x + w, y + h, r);
+    c.arcTo(x + w, y + h, x, y + h, r);
+    c.arcTo(x, y + h, x, y, r);
+    c.arcTo(x, y, x + w, y, r);
+    c.closePath();
+  }
+  const DRAWN = {
+    // 自己的牙刷（不共用牙刷）
+    toothbrush(c, s){
+      c.save();
+      c.rotate(0.6);
+      c.fillStyle = '#2e8b9b';
+      rr(c, -s*0.45, -s*0.06, s*0.7, s*0.12, s*0.06); c.fill();       // 柄
+      c.fillStyle = '#fdfdfd';
+      c.strokeStyle = '#c8d4d8';
+      c.lineWidth = 1.5;
+      rr(c, s*0.22, -s*0.09, s*0.24, s*0.18, 3); c.fill(); c.stroke(); // 刷頭
+      c.strokeStyle = '#e6eef0';
+      c.lineWidth = 2;
+      for (const dx of [0.27, 0.34, 0.41]){
+        c.beginPath(); c.moveTo(s*dx, -s*0.08); c.lineTo(s*dx, s*0.08); c.stroke();
+      }
+      c.restore();
+    },
+    // 排裝藥（按時吃、不自行停藥）
+    blister(c, s){
+      c.fillStyle = '#e8ecf2';
+      c.strokeStyle = '#aab6c4';
+      c.lineWidth = 1.5;
+      rr(c, -s*0.42, -s*0.3, s*0.84, s*0.6, 6); c.fill(); c.stroke();
+      c.fillStyle = '#f6b93d';
+      for (const dy of [-s*0.14, s*0.14]){
+        for (const dx of [-s*0.26, 0, s*0.26]){
+          c.beginPath(); c.arc(dx, dy, s*0.09, 0, Math.PI*2); c.fill();
+        }
+      }
+    },
+    // 14 天日曆（療程吃好吃滿）
+    calendar(c, s){
+      c.fillStyle = '#fdfdf8';
+      c.strokeStyle = '#b8c2cc';
+      c.lineWidth = 1.5;
+      rr(c, -s*0.36, -s*0.32, s*0.72, s*0.64, 6); c.fill(); c.stroke();
+      c.fillStyle = '#14523c';
+      rr(c, -s*0.36, -s*0.32, s*0.72, s*0.18, 6); c.fill();
+      c.fillStyle = '#1d3329';
+      c.font = '700 ' + Math.round(s*0.34) + 'px "Noto Sans TC", sans-serif';
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      c.fillText('14', 0, s*0.1);
+    },
+    // 抽血試管（複檢不能用抽血驗抗體——NG 品）
+    bloodtube(c, s){
+      c.save();
+      c.rotate(0.35);
+      c.fillStyle = '#f3f6f8';
+      c.strokeStyle = '#a9b6bf';
+      c.lineWidth = 1.5;
+      rr(c, -s*0.09, -s*0.34, s*0.18, s*0.68, s*0.09); c.fill(); c.stroke(); // 管身
+      c.fillStyle = '#c0392b';
+      rr(c, -s*0.09, 0, s*0.18, s*0.34, s*0.09); c.fill();                   // 血液
+      c.fillStyle = '#8e44ad';
+      rr(c, -s*0.11, -s*0.4, s*0.22, s*0.12, 4); c.fill();                   // 管蓋
+      c.restore();
+    }
+  };
 
   let W = 0, H = 0, dpr = 1;
   let state = 'idle';             // idle | playing | fact | over
@@ -418,8 +491,10 @@
     else if (r < 0.06 + Math.min(0.16 + level*0.02, 0.3)) { kind = 'bad'; emoji = BAD[Math.floor(Math.random()*BAD.length)]; }
     else { kind = 'good'; emoji = GOOD[Math.floor(Math.random()*GOOD.length)]; }
     const size = 42;
+    let sprite = null;
+    if (emoji && emoji.indexOf('draw:') === 0){ sprite = emoji.slice(5); emoji = null; }
     items.push({
-      kind, emoji, size,
+      kind, emoji, sprite, size,
       x: size + Math.random() * (W - size*2),
       y: -size,
       vy: (70 + Math.random()*50) * speedForLevel(),
@@ -457,7 +532,7 @@
       combo = 0;
       lives--;
       burst(it.x, tray.y - 10, '#b0442e', 14);
-      toast(BAD_LINES[it.emoji] || '服藥期間別碰酒！', 1400);
+      toast(BAD_LINES[it.sprite ? 'draw:' + it.sprite : it.emoji] || '服藥期間別碰酒！', 1400);
       if (lives <= 0){ gameOver(); }
     }
     updateHud();
@@ -597,8 +672,12 @@
       ctx.save();
       ctx.translate(it.x, it.y);
       ctx.rotate(Math.sin(it.a) * 0.22);
-      ctx.font = it.size + 'px "Noto Sans TC", sans-serif';
-      ctx.fillText(it.emoji, 0, 0);
+      if (it.sprite){
+        DRAWN[it.sprite](ctx, it.size);
+      } else {
+        ctx.font = it.size + 'px "Noto Sans TC", sans-serif';
+        ctx.fillText(it.emoji, 0, 0);
+      }
       ctx.restore();
     }
 
