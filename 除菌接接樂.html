@@ -369,21 +369,35 @@
     c.closePath();
   }
   const DRAWN = {
-    // 自己的牙刷（不共用牙刷）
+    // 自己的牙刷（不共用牙刷）——加牙膏才像牙刷
     toothbrush(c, s){
+      const L = s*1.15;
       c.save();
-      c.rotate(0.6);
-      c.fillStyle = '#2e8b9b';
-      rr(c, -s*0.45, -s*0.06, s*0.7, s*0.12, s*0.06); c.fill();       // 柄
-      c.fillStyle = '#fdfdfd';
-      c.strokeStyle = '#c8d4d8';
+      c.rotate(-0.5);
+      // 柄（藍綠圓端）
+      c.strokeStyle = '#2e8b9b';
+      c.lineWidth = s*0.14;
+      c.lineCap = 'round';
+      c.beginPath(); c.moveTo(-L*0.45, 0); c.lineTo(L*0.14, 0); c.stroke();
+      // 頸（稍細）
+      c.lineWidth = s*0.1;
+      c.beginPath(); c.moveTo(L*0.14, 0); c.lineTo(L*0.42, 0); c.stroke();
+      // 刷毛塊（白色，往上）
+      c.fillStyle = '#ffffff';
+      c.strokeStyle = '#b9c6cb';
       c.lineWidth = 1.5;
-      rr(c, s*0.22, -s*0.09, s*0.24, s*0.18, 3); c.fill(); c.stroke(); // 刷頭
-      c.strokeStyle = '#e6eef0';
-      c.lineWidth = 2;
-      for (const dx of [0.27, 0.34, 0.41]){
-        c.beginPath(); c.moveTo(s*dx, -s*0.08); c.lineTo(s*dx, s*0.08); c.stroke();
+      rr(c, L*0.16, -s*0.24, L*0.27, s*0.2, 3); c.fill(); c.stroke();
+      // 毛線
+      c.strokeStyle = '#dfe8ea';
+      c.lineWidth = 1.5;
+      for (const t of [0.22, 0.28, 0.34]){
+        c.beginPath(); c.moveTo(L*t, -s*0.22); c.lineTo(L*t, -s*0.06); c.stroke();
       }
+      // 牙膏（薄荷綠圓潤一條）
+      c.strokeStyle = '#3fae8f';
+      c.lineWidth = s*0.1;
+      c.lineCap = 'round';
+      c.beginPath(); c.moveTo(L*0.19, -s*0.3); c.lineTo(L*0.39, -s*0.3); c.stroke();
       c.restore();
     },
     // 排裝藥（按時吃、不自行停藥）
