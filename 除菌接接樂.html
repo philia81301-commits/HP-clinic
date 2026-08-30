@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>除菌接接樂｜幽門螺旋桿菌衛教遊戲</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap">
+<style>
+  :root{
+    --cream:#eef8f2;
+    --cream-deep:#dcefe4;
+    --ink:#1d3329;
+    --ink-soft:#5d7a6c;
+    --amber:#217a5b;
+    --amber-deep:#14523c;
+    --power:#1c6e93;
+    --bad:#b0442e;
+    --card:#fbfffc;
+    --sans:"Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--sans);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    min-height:100vh;
+    overflow-x:hidden;
+    /* 拖曳操控時不要讓瀏覽器反白選取文字（會蓋住標題與分數） */
+    user-select:none;
+    -webkit-user-select:none;
+  }
+  header{
+    width:100%;
+    max-width:720px;
+    padding:18px 16px 10px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .brand{
+    font-weight:900;
+    font-size:clamp(1.5rem,4.8vw,2.1rem);
+    letter-spacing:.08em;
+    color:var(--amber-deep);
+    text-wrap:balance;
+  }
+  .brand small{
+    display:block;
+    font-weight:500;
+    font-size:.78rem;
+    letter-spacing:.3em;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .hi{
+    text-align:right;
+    font-size:.82rem;
+    color:var(--ink-soft);
+    letter-spacing:.08em;
+  }
+  .hi b{
+    display:block;
+    font-size:1.35rem;
+    color:var(--ink);
+    font-variant-numeric:tabular-nums;
+  }
+  .hud{
+    width:100%;
+    max-width:720px;
+    padding:0 16px 8px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+    font-variant-numeric:tabular-nums;
+  }
+  .hud .score{
+    font-weight:900;
+    font-size:1.6rem;
+    min-width:5ch;
+  }
+  .lives{font-size:1.3rem; letter-spacing:.12em; user-select:none;}
+  .bank{
+    flex:1;
+    height:16px;
+    border-radius:8px;
+    background:var(--cream-deep);
+    border:1px solid #bcdccb;
+    overflow:hidden;
+  }
+  .bank i{
+    display:block;
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #6fbf9d, var(--amber));
+    border-radius:8px;
+    transition:width .18s ease;
+  }
+  .bank-label{
+    font-size:.8rem;
+    color:var(--ink-soft);
+    letter-spacing:.18em;
+    white-space:nowrap;
+  }
+  .stage-wrap{
+    width:100%;
+    max-width:720px;
+    padding:0 16px 16px;
+    position:relative;
+    touch-action:none;
+  }
+  canvas{
+    display:block;
+    width:100%;
+    border-radius:14px;
+    background:linear-gradient(180deg, #f9fdfa 0%, #e9f4ee 72%, #d7e9de 100%);
+    border:1px solid #c2ddce;
+    box-shadow:0 10px 28px rgba(20,82,60,.14);
+    touch-action:none;
+    cursor:none;
+  }
+  .overlay{
+    position:absolute;
+    inset:0 16px 16px;
+    border-radius:14px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    text-align:center;
+    background:rgba(238,248,242,.94);
+    backdrop-filter:blur(2px);
+    padding:24px;
+  }
+  .overlay.hidden{display:none;}
+  .overlay h1{
+    font-weight:900;
+    font-size:clamp(1.7rem,6vw,2.5rem);
+    color:var(--amber-deep);
+    letter-spacing:.06em;
+    text-wrap:balance;
+  }
+  .overlay p{
+    max-width:32ch;
+    line-height:1.9;
+    color:var(--ink);
+    font-size:1.02rem;
+  }
+  .overlay .hint{color:var(--ink-soft); font-size:.92rem;}
+  .rules{
+    display:flex;
+    gap:14px;
+    flex-wrap:wrap;
+    justify-content:center;
+    font-size:.95rem;
+  }
+  .rules span{
+    background:var(--card);
+    border:1.5px solid #c2ddce;
+    border-radius:999px;
+    padding:9px 16px;
+    box-shadow:0 2px 6px rgba(20,82,60,.08);
+    font-weight:500;
+  }
+  .rules .bonus{border-color:#9cc3d6; color:var(--power); font-weight:700;}
+  .rules .bad{border-color:#dcb0a4; color:var(--bad); font-weight:700;}
+  button{
+    font-family:var(--sans);
+    font-weight:900;
+    font-size:1.2rem;
+    letter-spacing:.2em;
+    color:#fff;
+    background:var(--amber);
+    border:none;
+    border-radius:999px;
+    padding:15px 48px;
+    cursor:pointer;
+    box-shadow:0 6px 16px rgba(33,122,91,.35);
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  button:hover{transform:translateY(-2px); box-shadow:0 9px 20px rgba(33,122,91,.42);}
+  button:focus-visible{outline:3px solid var(--amber-deep); outline-offset:3px;}
+  .fact-card{
+    background:var(--card);
+    border:2px solid var(--amber);
+    border-radius:16px;
+    padding:22px 26px;
+    max-width:46ch;
+    box-shadow:0 8px 24px rgba(20,82,60,.16);
+  }
+  .fact-card .tag{
+    display:inline-block;
+    font-size:.8rem;
+    font-weight:700;
+    letter-spacing:.25em;
+    color:#fff;
+    background:var(--amber);
+    border-radius:999px;
+    padding:4px 14px;
+    margin-bottom:12px;
+  }
+  .fact-card p{
+    font-size:1.12rem;
+    line-height:1.9;
+    font-weight:500;
+    max-width:none;
+    text-align:left;
+  }
+  .takeaway{
+    text-align:left;
+    max-width:44ch;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .takeaway p{font-size:.98rem; line-height:1.8; max-width:none;}
+  .takeaway b{color:var(--amber-deep);}
+  .final{
+    font-size:1.15rem;
+    font-weight:700;
+    color:var(--amber-deep);
+    font-variant-numeric:tabular-nums;
+  }
+  .toast{
+    position:absolute;
+    top:18px;
+    left:50%;
+    transform:translateX(-50%) translateY(-8px);
+    background:var(--amber-deep);
+    color:#eef8f2;
+    font-size:.95rem;
+    font-weight:500;
+    letter-spacing:.06em;
+    padding:10px 20px;
+    border-radius:999px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+    white-space:nowrap;
+  }
+  .toast.show{opacity:.96; transform:translateX(-50%) translateY(0);}
+  footer{
+    padding:0 20px 24px;
+    font-size:.74rem;
+    color:var(--ink-soft);
+    line-height:1.8;
+    text-align:center;
+    max-width:640px;
+  }
+  footer a{color:var(--amber); font-weight:700;}
+  @media (prefers-reduced-motion: reduce){
+    button, .toast, .bank i{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">除菌接接樂<small>幽門螺旋桿菌衛教遊戲</small></div>
+  <div class="hi">歷史最高<b id="hiScore">0</b></div>
+</header>
+
+<div class="hud">
+  <div class="score" id="score">0</div>
+  <div class="lives" id="lives">❤️❤️❤️</div>
+  <div class="bank"><i id="bankBar"></i></div>
+  <div class="bank-label">除菌進度 · 第 <span id="level">1</span> 關</div>
+</div>
+
+<div class="stage-wrap">
+  <canvas id="game"></canvas>
+  <div class="toast" id="toast"></div>
+
+  <div class="overlay" id="startOverlay">
+    <h1>除菌接接樂</h1>
+    <p>移動胃寶寶，接住除菌成功的好習慣，集滿進度就過關。服藥期間酒來搗亂——千萬別碰！</p>
+    <div class="rules">
+      <span>🥢🥄🍽️ 公筷母匙 +10</span>
+      <span>💊🧼 按時吃藥、勤洗手 +10</span>
+      <span class="bonus">💨 吹氣複檢 +50</span>
+      <span class="bad">🍺🍶 扣一命</span>
+    </div>
+    <p class="hint">← → 方向鍵、滑鼠或手指拖曳都可以操控。每過一關，送你一則除菌小知識。</p>
+    <button id="startBtn">開始除菌</button>
+  </div>
+
+  <div class="overlay hidden" id="factOverlay">
+    <h1>過關！</h1>
+    <div class="fact-card">
+      <span class="tag">除 菌 小 知 識</span>
+      <p id="factText"></p>
+    </div>
+    <button id="factBtn">繼續闖關</button>
+  </div>
+
+  <div class="overlay hidden" id="overOverlay">
+    <h1 id="overTitle">今天先休息</h1>
+    <div class="takeaway">
+      <p style="font-weight:900; color:var(--amber-deep)">帶走這三句話：</p>
+      <p>① <b>按時把藥吃完</b>，服藥期間與停藥後 48 小時<b>不喝酒</b>。</p>
+      <p>② <b>吃完藥滿一個月回來複檢</b>；複檢前胃藥停 2 週。</p>
+      <p>③ <b>家人先篩檢、陽性再治療</b>，用公筷母匙，避免咀嚼餵食小孩。</p>
+    </div>
+    <div class="final" id="finalScore"></div>
+    <button id="againBtn">再玩一次</button>
+  </div>
+</div>
+
+<footer>
+  <p style="margin-bottom:6px"><a href="output/幽門螺旋桿菌陽性處置_病人衛教單張.html">← 回衛教單張（含除菌大作戰五連闖）</a>　·　<a href="./">幽門桿菌處置包首頁</a></p>
+  本遊戲內容取自本站病人衛教單張，僅供衛教參考，不能取代醫師的診斷與建議。
+  用藥方案、複檢安排請與您的醫師討論。
+</footer>
+
+<script>
+(function(){
+  const canvas = document.getElementById('game');
+  const ctx = canvas.getContext('2d');
+  const scoreEl = document.getElementById('score');
+  const livesEl = document.getElementById('lives');
+  const bankBar = document.getElementById('bankBar');
+  const levelEl = document.getElementById('level');
+  const hiEl = document.getElementById('hiScore');
+  const toastEl = document.getElementById('toast');
+  const startOverlay = document.getElementById('startOverlay');
+  const factOverlay = document.getElementById('factOverlay');
+  const factText = document.getElementById('factText');
+  const overOverlay = document.getElementById('overOverlay');
+  const overTitle = document.getElementById('overTitle');
+  const finalScore = document.getElementById('finalScore');
+
+  const GOOD = ['🥢','🥄','🍽️','🧼','💊'];
+  const BAD  = ['🍺','🍶'];
+  const POWER = '💨';
+  const BAD_LINES = {
+    '🍺':'服藥期間嚴格禁酒！',
+    '🍶':'停藥後 48 小時內也不能喝！'
+  };
+  // 除菌小知識：內容取自本站病人衛教單張（潘醫師審定過的衛教內容）
+  const FACTS = [
+    '幽門螺旋桿菌感染後不會自己好，會一直待在胃裡。除菌後可降低胃潰瘍、胃癌的風險。',
+    '請按時把藥服完，不可自行停藥或減量——沒吃完等於沒治，細菌還可能產生抗藥性，下次更難治。',
+    '服藥期間與停藥後 48 小時內嚴格禁酒，藥物和酒精作用會引起嚴重不適。',
+    '大便變黑、舌頭變黑是鉍劑的正常現象，不是出血，不需要停藥。',
+    '四環黴素等藥品要跟牛奶、鈣片、鐵劑隔開 2 小時以上。',
+    '吃完最後一顆藥滿一個月後回來複檢，方式是吹氣檢查或糞便檢查——抽血驗抗體不能確認有沒有殺乾淨。',
+    '複檢前若還在吃胃藥要注意：氫離子幫浦阻斷劑這類胃藥要先停 2 週，以免影響結果。',
+    '幽門螺旋桿菌會傳染，主要經由共用餐具、牙刷或餵食，尤其是小孩。用公筷母匙、不共用牙刷。',
+    '同住家人建議先篩檢、陽性才一起治療；45～74 歲的家人有政府終身一次免費糞便篩檢。',
+    '成功殺菌後再感染的機率約 1%。維持良好飲食衛生、家人一起篩檢，就不容易「乒乓球」傳來傳去。'
+  ];
+  const LEVEL_NEED = 10;          // 每關要接的好東西數
+
+  let W = 0, H = 0, dpr = 1;
+  let state = 'idle';             // idle | playing | fact | over
+  let score, lives, level, caught, combo, factIdx;
+  let items, particles, tray;
+  let lastTime = 0, spawnTimer = 0, toastTimer = null;
+  let keys = {left:false, right:false};
+  let hi = 0;
+  try { hi = parseInt(localStorage.getItem('hp-catch-hi')) || 0; } catch(e){}
+  hiEl.textContent = hi;
+
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resize(){
+    const w = canvas.clientWidth;
+    const h = Math.min(Math.max(w * 0.9, 380), window.innerHeight * 0.62);
+    dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.height = h + 'px';
+    W = w; H = h;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    if (tray) tray.y = H - 44;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function newGame(){
+    score = 0; lives = 3; level = 1; caught = 0; combo = 0; factIdx = 0;
+    items = []; particles = [];
+    tray = {x: W/2, y: H - 44, w: Math.max(96, W*0.18)};
+    spawnTimer = 0;
+    updateHud();
+    state = 'playing';
+    lastTime = performance.now();
+    requestAnimationFrame(loop);
+  }
+
+  function updateHud(){
+    scoreEl.textContent = score;
+    livesEl.textContent = '❤️'.repeat(lives) + '🖤'.repeat(3 - lives);
+    bankBar.style.width = (caught / LEVEL_NEED * 100) + '%';
+    levelEl.textContent = level;
+  }
+
+  function toast(msg, ms){
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toastEl.classList.remove('show'), ms || 1300);
+  }
+
+  function speedForLevel(){
+    return 0.85 + (level - 1) * 0.15;   // 起步放慢，每關加速 15%
+  }
+
+  function spawn(){
+    const r = Math.random();
+    let kind, emoji;
+    if (r < 0.06) { kind = 'power'; emoji = POWER; }
+    else if (r < 0.06 + Math.min(0.16 + level*0.02, 0.3)) { kind = 'bad'; emoji = BAD[Math.floor(Math.random()*BAD.length)]; }
+    else { kind = 'good'; emoji = GOOD[Math.floor(Math.random()*GOOD.length)]; }
+    const size = 42;
+    items.push({
+      kind, emoji, size,
+      x: size + Math.random() * (W - size*2),
+      y: -size,
+      vy: (70 + Math.random()*50) * speedForLevel(),
+      drift: (Math.random()-0.5) * 28,
+      rot: (Math.random()-0.5) * 1.4,
+      a: Math.random()*Math.PI*2
+    });
+  }
+
+  function burst(x, y, color, n){
+    if (reducedMotion) return;
+    for (let i=0;i<n;i++){
+      const ang = Math.random()*Math.PI*2, sp = 60 + Math.random()*120;
+      particles.push({x, y, vx:Math.cos(ang)*sp, vy:Math.sin(ang)*sp - 60, life:0.6, t:0.6, color});
+    }
+  }
+
+  function catchItem(it){
+    if (it.kind === 'good'){
+      combo++;
+      const bonus = combo >= 8 ? 3 : combo >= 4 ? 2 : 1;
+      score += 10 * bonus;
+      caught++;
+      burst(it.x, tray.y - 10, '#217a5b', 8);
+      if (bonus > 1) toast('連接 ×' + bonus + '！', 800);
+      if (caught >= LEVEL_NEED){ levelUp(); }
+    } else if (it.kind === 'power'){
+      combo++;
+      score += 50;
+      caught = Math.min(caught + 2, LEVEL_NEED);  // 複檢確認殺乾淨，一次進兩格
+      burst(it.x, tray.y - 10, '#1c6e93', 18);
+      toast('💨 吹氣複檢！確認殺乾淨 +50', 1200);
+      if (caught >= LEVEL_NEED){ levelUp(); }
+    } else {
+      combo = 0;
+      lives--;
+      burst(it.x, tray.y - 10, '#b0442e', 14);
+      toast(BAD_LINES[it.emoji] || '服藥期間別碰酒！', 1400);
+      if (lives <= 0){ gameOver(); }
+    }
+    updateHud();
+  }
+
+  function levelUp(){
+    level++;
+    caught = 0;
+    score += 30;
+    updateHud();
+    state = 'fact';
+    canvas.style.cursor = 'default';
+    factText.textContent = FACTS[factIdx % FACTS.length];
+    factIdx++;
+    factOverlay.classList.remove('hidden');
+  }
+
+  function gameOver(){
+    state = 'over';
+    canvas.style.cursor = 'default';
+    let isNew = false;
+    if (score > hi){
+      hi = score; isNew = true;
+      try { localStorage.setItem('hp-catch-hi', hi); } catch(e){}
+      hiEl.textContent = hi;
+    }
+    overTitle.textContent = isNew ? '新紀錄！除菌達人' : '今天先休息';
+    finalScore.textContent = '本次得分 ' + score + '　·　闖到第 ' + level + ' 關　·　歷史最高 ' + hi;
+    overOverlay.classList.remove('hidden');
+  }
+
+  function drawTray(){
+    const {x, y} = tray;
+    ctx.save();
+    // 能量光暈
+    const g = ctx.createRadialGradient(x, y, 8, x, y, tray.w/2 + 16);
+    g.addColorStop(0, 'rgba(33,122,91,.20)');
+    g.addColorStop(1, 'rgba(33,122,91,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, tray.w/2 + 16, 0, Math.PI*2);
+    ctx.fill();
+    // 手繪胃寶寶——不用 emoji 當主角，長輩看得清楚、舊手機也不怕缺字
+    ctx.fillStyle = '#f2a7b0';
+    ctx.strokeStyle = '#d17c88';
+    ctx.lineWidth = 2.5;
+    // 主體囊袋
+    ctx.beginPath();
+    ctx.ellipse(x - 6, y - 4, 26, 21, -0.35, 0, Math.PI*2);
+    ctx.fill();
+    ctx.stroke();
+    // 幽門端小管（往右下）
+    ctx.beginPath();
+    ctx.ellipse(x + 20, y + 10, 12, 9, 0.5, 0, Math.PI*2);
+    ctx.fill();
+    ctx.stroke();
+    // 高光
+    ctx.fillStyle = 'rgba(255,255,255,.55)';
+    ctx.beginPath();
+    ctx.ellipse(x - 15, y - 13, 7, 4.5, -0.5, 0, Math.PI*2);
+    ctx.fill();
+    // 眼睛與微笑
+    ctx.fillStyle = '#7c3742';
+    ctx.beginPath(); ctx.arc(x - 13, y - 7, 2.4, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + 2, y - 7, 2.4, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = '#a34d59';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(x - 5, y - 3, 7, 0.15*Math.PI, 0.85*Math.PI);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function loop(now){
+    if (state !== 'playing') return;
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    spawnTimer -= dt;
+    if (spawnTimer <= 0){
+      spawn();
+      spawnTimer = Math.max(0.95 / speedForLevel(), 0.32) * (0.75 + Math.random()*0.5);
+    }
+
+    const kv = 650;
+    if (keys.left)  tray.x -= kv * dt;
+    if (keys.right) tray.x += kv * dt;
+    tray.x = Math.max(tray.w/2, Math.min(W - tray.w/2, tray.x));
+
+    for (let i = items.length - 1; i >= 0; i--){
+      const it = items[i];
+      it.y += it.vy * dt;
+      it.x += it.drift * dt;
+      it.a += it.rot * dt;
+      if (it.x < it.size/2) { it.x = it.size/2; it.drift *= -1; }
+      if (it.x > W - it.size/2) { it.x = W - it.size/2; it.drift *= -1; }
+      if (it.y >= tray.y - 22 && it.y <= tray.y + 16 &&
+          Math.abs(it.x - tray.x) <= tray.w/2 + it.size*0.3){
+        catchItem(it);
+        items.splice(i,1);
+        if (state !== 'playing') return;   // 過關或結束時立刻停住畫面
+        continue;
+      }
+      if (it.y > H + it.size){
+        if (it.kind === 'good' || it.kind === 'power') combo = 0;
+        items.splice(i,1);
+      }
+    }
+
+    for (let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.t -= dt;
+      if (p.t <= 0){ particles.splice(i,1); continue; }
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 300 * dt;
+    }
+
+    ctx.clearRect(0,0,W,H);
+
+    // 背景：淡淡的能量點點
+    ctx.save();
+    ctx.globalAlpha = 0.06;
+    ctx.fillStyle = '#217a5b';
+    for (let i = 0; i < 9; i++){
+      const bx = (i * 197 + 60) % W;
+      const by = (i * 131 + 40) % H;
+      ctx.beginPath();
+      ctx.arc(bx, by, 22 + (i % 4) * 10, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (const it of items){
+      ctx.save();
+      ctx.translate(it.x, it.y);
+      ctx.rotate(Math.sin(it.a) * 0.22);
+      ctx.font = it.size + 'px "Noto Sans TC", sans-serif';
+      ctx.fillText(it.emoji, 0, 0);
+      ctx.restore();
+    }
+
+    for (const p of particles){
+      ctx.globalAlpha = p.t / p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    drawTray();
+    requestAnimationFrame(loop);
+  }
+
+  // 操控：鍵盤
+  window.addEventListener('keydown', e=>{
+    if (e.key === 'ArrowLeft')  { keys.left = true;  e.preventDefault(); }
+    if (e.key === 'ArrowRight') { keys.right = true; e.preventDefault(); }
+  });
+  window.addEventListener('keyup', e=>{
+    if (e.key === 'ArrowLeft')  keys.left = false;
+    if (e.key === 'ArrowRight') keys.right = false;
+  });
+  // 視窗失焦時放掉所有按鍵，避免「以為你還按著」把手臂推死在邊緣
+  function releaseKeys(){ keys.left = false; keys.right = false; }
+  window.addEventListener('blur', releaseKeys);
+  document.addEventListener('visibilitychange', releaseKeys);
+
+  // 操控：滑鼠／觸控（全視窗追蹤，並依實際顯示寬度換算座標）
+  function pointTo(clientX){
+    const rect = canvas.getBoundingClientRect();
+    const x = (clientX - rect.left) * (W / rect.width);
+    tray.x = Math.max(tray.w/2, Math.min(W - tray.w/2, x));
+  }
+  window.addEventListener('pointermove', e=>{ if (state==='playing') pointTo(e.clientX); });
+  window.addEventListener('pointerdown', e=>{
+    if (state !== 'playing') return;
+    releaseKeys();
+    pointTo(e.clientX);
+    // 抓住這根手指：滑出畫布外也持續追蹤，不會被瀏覽器當成捲動而中斷
+    try { canvas.setPointerCapture(e.pointerId); } catch(err){}
+  });
+  canvas.addEventListener('pointermove', e=>{ if (state==='playing') pointTo(e.clientX); });
+  canvas.addEventListener('touchmove', e=>{
+    if (state==='playing') e.preventDefault();
+  }, {passive:false});
+  canvas.addEventListener('touchstart', e=>{
+    if (state==='playing') e.preventDefault();
+  }, {passive:false});
+
+  function resume(){
+    canvas.style.cursor = 'none';
+    state = 'playing';
+    lastTime = performance.now();
+    requestAnimationFrame(loop);
+  }
+  document.getElementById('startBtn').addEventListener('click', ()=>{
+    startOverlay.classList.add('hidden');
+    canvas.style.cursor = 'none';
+    newGame();
+  });
+  document.getElementById('factBtn').addEventListener('click', ()=>{
+    factOverlay.classList.add('hidden');
+    items = [];              // 清場重新開始掉落，給讀完知識的人一點喘息
+    resume();
+  });
+  document.getElementById('againBtn').addEventListener('click', ()=>{
+    overOverlay.classList.add('hidden');
+    canvas.style.cursor = 'none';
+    newGame();
+  });
+})();
+</script>
+
+</body>
+</html>

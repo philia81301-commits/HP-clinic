@@ -48,6 +48,14 @@
   .panel.active{display:block}
   @keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
+  /* ── 除菌接接樂連結卡（僅螢幕）── */
+  .game-link{display:block;margin-top:16px;padding:18px 24px;background:#fff;
+    border:1px solid var(--pline);border-radius:20px;box-shadow:var(--shadow);
+    text-decoration:none;color:var(--ink2);font-size:18px;line-height:1.7;
+    transition:box-shadow .2s,transform .2s}
+  .game-link:hover{box-shadow:0 6px 22px rgba(15,23,42,.13);transform:translateY(-1px)}
+  .game-link b{color:var(--main)}
+
   /* ── 內容區：螢幕顯示成白色卡片，列印還原成緊湊單張 ── */
   .page{background:none}
   .page .panel{background:#fff;border:1px solid var(--pline);border-radius:20px;
@@ -228,6 +236,7 @@ li{margin-bottom:8px}
       </div>
     </div>
   </div>
+  <a class="game-link no-print" href="../除菌接接樂.html">🛡️ 還想動動手指？玩 <b>除菌接接樂</b>——移動胃寶寶接住公筷母匙和按時吃藥、閃開酒，每過一關送一則除菌小知識　→</a>
 </section>
 
 <div class="page" id="leaflet">

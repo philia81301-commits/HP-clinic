@@ -4,6 +4,16 @@
 
 ## ⏯️ 目前做到哪
 
+**2026-08-30：新增「除菌接接樂」動作小遊戲。** 潘醫師指示比照 pneumonia／sarcopenia
+兩站的接接樂做幽門版。獨立頁 `除菌接接樂.html`（repo 根目錄，單檔 canvas 遊戲）：
+移動手繪胃寶寶接 🥢🥄🍽️ 公筷母匙、💊🧼 按時吃藥勤洗手（+10），💨 吹氣複檢 +50 且
+進度加倍，閃 🍺🍶（扣一命，吐槽詞就是「服藥期間嚴格禁酒」「停藥後 48 小時內也不能喝」）；
+每過一關跳「除菌小知識」（**十則逐字取自衛教單張審定內容**），結尾＝單張的帶走三句話。
+入口在 `src/leaflet.template.html` 五連闖 quiz 下方的 `.game-link`（no-print，
+單頁列印不變），已跑 `node src/build.js` 重建 output。沿用接接樂家族踩坑：主角 canvas
+手繪不用 emoji、setPointerCapture 觸控、失焦放鍵、body user-select:none。
+⚠️ 知識卡取自審定原文，但**遊戲呈現形式尚未經潘醫師過目**。
+
 **2026-08-28：衛教單張螢幕版面改版＋遊戲尺寸全站統一。**
 潘醫師指示遊戲版面要放大、三站尺寸統一、文字內容點了才出現，指定以
 `osteoporosis-clinic/patient-education.html` 的版型為準。完成：
