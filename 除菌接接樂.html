@@ -282,6 +282,7 @@
     <div class="rules">
       <span>🥢🥄🍽️ 公筷母匙 +10</span>
       <span>💊🧼👪 吃完療程、家人篩檢 +10</span>
+      <span>🛡️ 護胃盾 +20</span>
       <span class="bonus">💨 吹氣複檢 +50</span>
       <span class="bad">🍺🍶 扣一命</span>
     </div>
@@ -334,14 +335,14 @@
   const overTitle = document.getElementById('overTitle');
   const finalScore = document.getElementById('finalScore');
 
-  // 好料 9 種：emoji ＋ 手繪（牙刷、排裝藥、14天日曆沒有可靠的 emoji，畫的）
-  const GOOD = ['🥢','🥄','🍽️','🧼','💊','👪','draw:toothbrush','draw:blister','draw:calendar'];
-  const BAD  = ['🍺','🍶','draw:bloodtube'];
+  // 好料 10 種：emoji ＋ 手繪（牙刷、排裝藥、14天日曆沒有可靠的 emoji，畫的）
+  // 🛡️ 護胃盾＝除菌降低胃癌風險，接到必加碼並跳衛教訊息
+  const GOOD = ['🥢','🥄','🍽️','🧼','💊','👪','🛡️','draw:toothbrush','draw:blister','draw:calendar'];
+  const BAD  = ['🍺','🍶'];
   const POWER = '💨';
   const BAD_LINES = {
     '🍺':'服藥期間嚴格禁酒！',
-    '🍶':'停藥後 48 小時內也不能喝！',
-    'draw:bloodtube':'抽血驗抗體不能確認殺乾淨！'
+    '🍶':'停藥後 48 小時內也不能喝！'
   };
   // 除菌小知識：內容取自本站病人衛教單張（潘醫師審定過的衛教內容）
   const FACTS = [
@@ -430,20 +431,6 @@
       c.textBaseline = 'middle';
       c.fillText('14', 0, s*0.1);
     },
-    // 抽血試管（複檢不能用抽血驗抗體——NG 品）
-    bloodtube(c, s){
-      c.save();
-      c.rotate(0.35);
-      c.fillStyle = '#f3f6f8';
-      c.strokeStyle = '#a9b6bf';
-      c.lineWidth = 1.5;
-      rr(c, -s*0.09, -s*0.34, s*0.18, s*0.68, s*0.09); c.fill(); c.stroke(); // 管身
-      c.fillStyle = '#c0392b';
-      rr(c, -s*0.09, 0, s*0.18, s*0.34, s*0.09); c.fill();                   // 血液
-      c.fillStyle = '#8e44ad';
-      rr(c, -s*0.11, -s*0.4, s*0.22, s*0.12, 4); c.fill();                   // 管蓋
-      c.restore();
-    }
   };
 
   let W = 0, H = 0, dpr = 1;
@@ -536,7 +523,10 @@
       score += 10 * bonus;
       caught++;
       burst(it.x, tray.y - 10, '#217a5b', 8);
-      if (bonus > 1) toast('連接 ×' + bonus + '！', 800);
+      if (it.emoji === '🛡️'){
+        score += 10;   // 護胃盾必加碼
+        toast('🛡️ 除菌護胃！降低胃癌風險 +20', 1300);
+      } else if (bonus > 1) toast('連接 ×' + bonus + '！', 800);
       if (caught >= LEVEL_NEED){ levelUp(); }
     } else if (it.kind === 'power'){
       combo++;
